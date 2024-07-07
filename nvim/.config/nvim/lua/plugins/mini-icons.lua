@@ -6,10 +6,6 @@ return {
         glyph = "󰡨",
         hl = "MiniIconsBlue",
       },
-      gitkeep = {
-        glyph = "󰡨",
-        hl = "MiniIconsBlue",
-      },
     },
     extension = {
       ["sh"] = {
@@ -87,6 +83,10 @@ return {
         hl = "MiniIconsBlue",
       },
       ["tailwind.config.ts"] = {
+        glyph = "󱏿",
+        hl = "MiniIconsBlue",
+      },
+      ["tailwind.config.js"] = {
         glyph = "󱏿",
         hl = "MiniIconsBlue",
       },
