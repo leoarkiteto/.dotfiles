@@ -94,6 +94,10 @@ return {
         glyph = "󰛷",
         hl = "MiniIconsRed",
       },
+      [".nvmrc"] = {
+        glyph = "󰎙",
+        hl = "MiniIconsGreen",
+      },
     },
   },
 }
