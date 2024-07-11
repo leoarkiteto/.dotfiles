@@ -46,14 +46,6 @@ return {
       },
     },
     file = {
-      [".yarnrc.yml"] = {
-        glyph = "",
-        hl = "MiniIconsBlue",
-      },
-      ["yarn.lock"] = {
-        glyph = "",
-        hl = "MiniIconsBlue",
-      },
       ["docker-compose.yml"] = {
         glyph = "󰡨",
         hl = "MiniIconsBlue",
@@ -89,10 +81,6 @@ return {
       ["tailwind.config.js"] = {
         glyph = "󱏿",
         hl = "MiniIconsBlue",
-      },
-      ["package.json"] = {
-        glyph = "󰛷",
-        hl = "MiniIconsRed",
       },
       [".nvmrc"] = {
         glyph = "󰎙",
