@@ -1,6 +1,17 @@
 return {
   { "ellisonleao/gruvbox.nvim" },
   {
+    "maxmx03/fluoromachine.nvim",
+    opts = {
+      theme = "retrowave",
+      overrides = {
+        ["@type"] = { underline = true },
+        ["@comment"] = { italic = true },
+        ["@function"] = { bold = true },
+      },
+    },
+  },
+  {
     "catppuccin/nvim",
     lazy = true,
     name = "catppuccin",
@@ -54,7 +65,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "catppuccin",
+      colorscheme = "fluoromachine",
     },
   },
 }
