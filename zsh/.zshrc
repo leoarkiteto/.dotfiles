@@ -113,6 +113,8 @@ alias pn=pnpm
 alias gitgraph=$HOME/Documents/git-graph
 alias py=python3
 alias nv=nvim
+alias lzd='lazydocker'
+alias lzg='lazygit'
 
 export PATH="$PATH:$GOPATH/bin"
 
@@ -130,5 +132,3 @@ esac
 # pnpm end
 
 eval "$(starship init zsh)"
-alias lzd='lazydocker'
-alias lzg='lazygit'
