@@ -62,10 +62,10 @@ return {
       },
     },
   },
-  {
-    "LazyVim/LazyVim",
-    opts = {
-      colorscheme = "fluoromachine",
-    },
-  },
+  -- {
+  --   "LazyVim/LazyVim",
+  --   opts = {
+  --     colorscheme = "catppuccin",
+  --   },
+  -- },
 }
