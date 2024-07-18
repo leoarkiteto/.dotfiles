@@ -62,11 +62,35 @@ return {
         glyph = "󰱺",
         hl = "MiniIconsBlue",
       },
+      [".eslintrc.cjs"] = {
+        glyph = "󰱺",
+        hl = "MiniIconsBlue",
+      },
+      [".eslintrc.mjs"] = {
+        glyph = "󰱺",
+        hl = "MiniIconsBlue",
+      },
+      [".eslintrc.js"] = {
+        glyph = "󰱺",
+        hl = "MiniIconsBlue",
+      },
       ["eslintrc.json"] = {
         glyph = "󰱺",
         hl = "MiniIconsBlue",
       },
       [".eslintrc.json"] = {
+        glyph = "󰱺",
+        hl = "MiniIconsBlue",
+      },
+      ["eslintrc.config.js"] = {
+        glyph = "󰱺",
+        hl = "MiniIconsBlue",
+      },
+      ["eslintrc.config.cjs"] = {
+        glyph = "󰱺",
+        hl = "MiniIconsBlue",
+      },
+      ["eslintrc.config.mjs"] = {
         glyph = "󰱺",
         hl = "MiniIconsBlue",
       },
@@ -81,6 +105,45 @@ return {
       ["tailwind.config.js"] = {
         glyph = "󱏿",
         hl = "MiniIconsBlue",
+      },
+      [".prettierrc"] = {
+        glyph = "",
+      },
+      [".prettierrc.yml"] = {
+        glyph = "",
+      },
+      [".prettierrc.yaml"] = {
+        glyph = "",
+      },
+      [".prettierrc.json5"] = {
+        glyph = "",
+      },
+      [".prettierrc.js"] = {
+        glyph = "",
+      },
+      [".prettierrc.cjs"] = {
+        glyph = "",
+      },
+      [".prettierrc.mjs"] = {
+        glyph = "",
+      },
+      ["prettierrc.config.mjs"] = {
+        glyph = "",
+      },
+      ["prettierrc.config.cjs"] = {
+        glyph = "",
+      },
+      ["prettierrc.config.js"] = {
+        glyph = "",
+      },
+      ["prettierrc.toml"] = {
+        glyph = "",
+      },
+      [".prettierrc.json"] = {
+        glyph = "",
+      },
+      [".prettierignore"] = {
+        glyph = "",
       },
       [".nvmrc"] = {
         glyph = "󰎙",
