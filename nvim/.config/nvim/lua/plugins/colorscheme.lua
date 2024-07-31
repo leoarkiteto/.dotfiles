@@ -20,10 +20,9 @@ return {
       styles = {
         functions = { "italic" },
         strings = { "italic" },
-        conditionals = { "italic" },
-        properties = { "italic" },
-        types = { "italic", "underline" },
-        operators = { "italic" },
+        comments = { "italic" },
+        types = { "underline" },
+        miscs = { "italic" },
       },
       integrations = {
         aerial = true,
@@ -65,7 +64,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "gruvbox",
+      colorscheme = "catppuccin",
     },
   },
 }
