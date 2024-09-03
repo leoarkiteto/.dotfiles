@@ -13,6 +13,10 @@ export ZSH="$HOME/.oh-my-zsh"
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 
+# Vim editor default OS
+export EDITOR='nvim'
+export VISUAL='nvim'
+
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -79,7 +83,7 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git dotenv docker docker-compose starship node history git-flow zsh-autosuggestions zsh-syntax-highlighting sudo brew command-not-found gh iterm2 thefuck)
+plugins=(poetry git dotenv docker docker-compose starship node history git-flow zsh-autosuggestions zsh-syntax-highlighting sudo brew command-not-found gh iterm2 thefuck)
 
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 source $ZSH/oh-my-zsh.sh
@@ -132,3 +136,9 @@ esac
 # pnpm end
 
 eval "$(starship init zsh)"
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
