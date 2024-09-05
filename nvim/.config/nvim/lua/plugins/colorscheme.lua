@@ -16,7 +16,11 @@ return {
     "catppuccin/nvim",
     name = "catppuccin",
   },
-  { "navarasu/onedark.nvim" },
+  { "navarasu/onedark.nvim", opts = {
+    code_style = {
+      strings = "italic",
+    },
+  } },
   {
     "LazyVim/LazyVim",
     opts = {
