@@ -11,6 +11,12 @@ config = {
 	color_scheme = "One Dark (Gogh)",
 	font = wezterm.font("VictorMono Nerd Font", { weight = "Bold" }),
 	font_size = 15,
+	window_padding = {
+		left = 8,
+		right = 0,
+		top = 8,
+		bottom = 8,
+	},
 }
 
 return config
