@@ -13,6 +13,9 @@ return {
     },
   },
   {
+    "Mofiqul/dracula.nvim",
+  },
+  {
     "catppuccin/nvim",
     name = "catppuccin",
   },
@@ -24,7 +27,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "onedark",
+      colorscheme = "dracula",
     },
   },
 }
