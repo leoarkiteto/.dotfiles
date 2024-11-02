@@ -1,7 +1,19 @@
 return {
   "nvim-neotest/neotest",
-  dependencies = { "haydenmeade/neotest-jest", "marilari88/neotest-vitest" },
+  dependencies = { "haydenmeade/neotest-jest", "marilari88/neotest-vitest", "nvim-neotest/neotest-go" },
   opts = function(_, opts)
+    -- Go adapters
+    table.insert(
+      opts.adapters,
+      require("neotest-go")({
+        experimental = {
+          test_table = true,
+        },
+        args = { "-count=1", "-timeout=60s" },
+      })
+    )
+
+    -- JavaScript adapters (jest,vitest)
     table.insert(
       opts.adapters,
       require("neotest-jest")({
