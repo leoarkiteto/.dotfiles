@@ -18,9 +18,42 @@ return {
           -- log_file_level = false,
           -- log_console_level = vim.log.levels.ERROR
         })
-
-        local languages = { "typescript", "javascript", "typescriptreact", "javascriptreact", "vue" }
         local dap = require("dap")
+
+        -- Configure Go adapter
+        dap.adapters.go = function(callback, config)
+          callback({ type = "server", host = "127.0.0.1", port = 38697 })
+        end
+        dap.configurations.go = {
+          {
+            type = "go",
+            name = "Degub Test (Current File)",
+            request = "launch",
+            mode = "test",
+            program = "${file}",
+          },
+          {
+            type = "go",
+            name = "Debug Test Package",
+            request = "launch",
+            program = "${workspaceFolder}",
+          },
+          {
+            type = "go",
+            name = "Debug",
+            request = "launch",
+            program = "${file}",
+          },
+          {
+            type = "go",
+            name = "Debug Package",
+            request = "launch",
+            program = "${workspaceFolder}",
+          },
+        }
+
+        -- Configure JavaScript/TypeScript adapters
+        local languages = { "typescript", "javascript", "typescriptreact", "javascriptreact", "vue" }
 
         for _, language in ipairs(languages) do
           dap.configurations[language] = {
