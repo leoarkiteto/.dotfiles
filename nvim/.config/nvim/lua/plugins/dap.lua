@@ -16,31 +16,31 @@ return {
       local dap = require("dap")
       -- Define signs for debugging
       vim.fn.sign_define("DapBreakpoint", {
-        text = "🔴", -- Use '🔴' or '⬤' for red circle
+        text = "󰀚", -- Use '🔴' or '⬤' for red circle
         texthl = "DapBreakpoint",
         linehl = "",
         numhl = "",
       })
       vim.fn.sign_define("DapBreakpointCondition", {
-        text = "🔶", -- Use '🔶' or '◆' for condition
+        text = "◆", -- Use '🔶' or '◆' for condition
         texthl = "DapBreakpointCondition",
         linehl = "",
         numhl = "",
       })
       vim.fn.sign_define("DapLogPoint", {
-        text = "📝", -- Use '📝' or '◆' for logpoint
+        text = "󱚍", -- Use '📝' or '◆' for logpoint
         texthl = "DapLogPoint",
         linehl = "",
         numhl = "",
       })
       vim.fn.sign_define("DapStopped", {
-        text = "⇒", -- Use '⇒' or '▶' for current position
+        text = "󰁔", -- Use '⇒' or '▶' for current position
         texthl = "DapStopped",
         linehl = "DapStoppedLine",
         numhl = "",
       })
       vim.fn.sign_define("DapBreakpointRejected", {
-        text = "❌", -- Use '❌' or '●' for rejected breakpoint
+        text = "󰅖", -- Use '❌' or '●' for rejected breakpoint
         texthl = "DapBreakpointRejected",
         linehl = "",
         numhl = "",
