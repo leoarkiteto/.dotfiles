@@ -1,6 +1,10 @@
 return {
   "nvim-neotest/neotest",
-  dependencies = { "nvim-neotest/neotest-jest", "marilari88/neotest-vitest", "nvim-neotest/neotest-go" },
+  dependencies = {
+    "nvim-neotest/neotest-jest",
+    "marilari88/neotest-vitest",
+    "fredrikaverpil/neotest-golang",
+  },
   opts = function(_, opts)
     local function is_nx_project()
       return vim.fn.filereadable(vim.fn.getcwd() .. "/nx.json") == 1
@@ -58,14 +62,26 @@ return {
     -- Go adapters
     table.insert(
       opts.adapters,
-      require("neotest-go")({
+      require("neotest-golang")({
+        go_test_args = {
+          "-timeout=60s",
+          "-coverprofile=coverage.out",
+          "-coverpkg=./...",
+        },
         experimental = {
           test_table = true,
         },
-        args = { "-count=1", "-timeout=60s" },
-        recursive_run = true,
+        filter_dir = function(name, rel_path, root)
+          return name ~= "vendor"
+        end,
       })
     )
+    vim.api.nvim_create_user_command("TestCoverage", function()
+      vim.cmd("!go tool cover -html=coverage.out")
+    end, {})
+
+    -- Configurar atalhos de teclado específicos para testes golang
+    vim.keymap.set("n", "<leader>tc", ":TestCoverage<CR>", { desc = "Show test coverage" })
 
     -- JavaScript adapters (jest,vitest)
     table.insert(
