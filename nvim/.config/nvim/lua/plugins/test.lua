@@ -28,35 +28,55 @@ return {
       return string.match(project_root, "/([^/]+)/src") or ""
     end
 
-    local function get_jest_config(file)
+    local function find_config(file, patterns)
       local project_root = get_project_root(file)
-      if is_nx_project() then
-        local project_config = project_root .. "jest.config.ts"
-        if vim.fn.filereadable(project_config) == 1 then
-          return project_config
-        end
-        return vim.fn.getcwd() .. "/jest.config.ts"
-      end
-
-      if is_monorepo_path(file) then
-        local project_config = project_root .. "jest.config.ts"
-        if vim.fn.filereadable(project_config) == 1 then
-          return project_config
+      for _, pattern in ipairs(patterns) do
+        local config = project_root .. pattern
+        if vim.fn.filereadable(config) == 1 then
+          return config
         end
       end
-      return vim.fn.getcwd() .. "/jest.config.ts"
+      return nil
     end
 
-    -- Default test arguments for better output
+    local function get_package_manager()
+      local project_root = vim.fn.getcwd()
+      if vim.fn.filereadable(project_root .. "/pnpm-lock.yaml") == 1 then
+        return "pnpm"
+      elseif vim.fn.filereadable(project_root .. "/yarn.lock") == 1 then
+        return "yarn"
+      else
+        return "npm"
+      end
+    end
+
+    local function get_jest_config(file)
+      local patterns = { "jest.config.ts", "jest.config.js" }
+      return find_config(file, patterns) or vim.fn.getcwd() .. "/jest/config.ts"
+    end
+
+    local function get_vitest_config(file)
+      local patterns = { "vitest.config.ts", "vitest.config.js", "vite.config.ts", "vite.config.js" }
+      return find_config(file, patterns) or vim.fn.getcwd() .. "/vite.config.ts"
+    end
+
     local default_jest_args = {
       "--verbose", -- Detailed output
       "--colors", -- Colored output
-      "--coverage=false", -- Disable coverage by default for faster runs
+      "--coverage", -- Disable coverage by default for faster runs
+      "--coverageReporters=lcov", -- Disable coverage by default for faster runs
+      "--coverageReporters=html", -- Disable coverage by default for faster runs
       "--no-cache", -- Disable Jest cache
       "--watchAll=false", -- Disable watch mode
       "--testLocationInResults", -- Include location info
       "--reporters=default", -- Use default reporter for better terminal output
       "--errorOnDeprecated", -- Show errors for deprecated features
+    }
+
+    local default_vitest_args = {
+      "run",
+      "--coverage",
+      "--no-watch",
     }
 
     -- Go adapters
@@ -76,14 +96,8 @@ return {
         end,
       })
     )
-    vim.api.nvim_create_user_command("TestCoverage", function()
-      vim.cmd("!go tool cover -html=coverage.out")
-    end, {})
 
-    -- Configurar atalhos de teclado específicos para testes golang
-    vim.keymap.set("n", "<leader>tc", ":TestCoverage<CR>", { desc = "Show test coverage" })
-
-    -- JavaScript adapters (jest,vitest)
+    -- JavaScript adapters (Jest)
     table.insert(
       opts.adapters,
       require("neotest-jest")({
@@ -97,10 +111,9 @@ return {
             local project_name = get_project_name(file)
             base_command = string.format("nx test %s", project_name)
           else
-            base_command = "pnpm test"
+            local pkg_manager = get_package_manager()
+            base_command = pkg_manager .. " jest"
           end
-
-          -- Add default arguments
           local args = table.concat(default_jest_args, " ")
           return base_command .. " -- " .. args
         end,
@@ -119,11 +132,26 @@ return {
             height = 40, -- Height of the integrated terminal
           },
         },
-        -- Additional options for better output
-        args = {
-          "--bail", -- Stop running tests after first failure
-          "--runInBand", -- Run tests sequentially
-        },
+      })
+    )
+
+    -- JavaScript adapters (Vitest)
+    table.insert(
+      opts.adapters,
+      require("neotest-vitest")({
+        vitestCommand = function()
+          local pkg_manager = get_package_manager()
+          local args = table.concat(default_vitest_args, "")
+
+          if is_nx_project() then
+            local project_name = get_project_name(file)
+            return string.format("nx test %s -- %s", project_name, args)
+          end
+          return string.format("%s exec vitest run %s", pkg_manager, args)
+        end,
+        vitestConfigFile = get_vitest_config,
+        env = { CI = true },
+        cwd = get_project_root,
       })
     )
 
@@ -158,7 +186,66 @@ return {
       unknown = "󰋖",
     }
 
-    -- Add Vitest adapter
-    table.insert(opts.adapters, require("neotest-vitest"))
+    local function find_coverage_report()
+      local project_root = vim.fn.getcwd()
+      local possible_paths = {
+        "/coverage/index.html",
+        "/coverage/lcov-report/index.html",
+        "/coverage/html/index.html",
+      }
+
+      for _, path in ipairs(possible_paths) do
+        local full_path = project_root .. path
+        if vim.fn.filereadable(full_path) == 1 then
+          return full_path
+        end
+      end
+      return nil
+    end
+
+    vim.api.nvim_create_user_command("TestCoverage", function()
+      local file_type = vim.bo.filetype
+      if file_type == "go" then
+        vim.cmd("!go tool cover -html=coverage.out")
+      elseif
+        file_type == "typescript"
+        or file_type == "javascript"
+        or file_type == "typescriptreact"
+        or file_type == "javascriptreact"
+      then
+        local coverage_path = find_coverage_report()
+        if coverage_path then
+          if vim.fn.has("mac") == 1 then
+            vim.fn.system("open " .. coverage_path)
+          elseif vim.fn.has("unix") == 1 then
+            vim.fn.system("xdg-open " .. coverage_path)
+          elseif vim.fn.has("win32") == 1 then
+            vim.fn.system("start " .. coverage_path)
+          end
+        else
+          vim.notify("Coverage report not found. Run tests with coverage first", vim.log.levels.WARN)
+          local config_path = vim.fn.getcwd() .. "/vitest.config.ts"
+          if vim.fn.filereadable(config_path) == 0 then
+            vim.notify(
+              "Consider adding a vitest.config.ts with coverage configuration:\n\n"
+                .. 'import {defineConfig} from "vitest/config"\n\n'
+                .. "export default defineConfig({\n"
+                .. "test: {\n"
+                .. "coverage: {\n"
+                .. 'provider: "v8",\n'
+                .. 'reporter: ["text", "html"],\n'
+                .. 'reportsDirectory: "./coverage"\n'
+                .. "}\n"
+                .. "}\n"
+                .. "})",
+              vim.log.levels.INFO
+            )
+          end
+        end
+      end
+    end, {})
+
+    -- Configurar atalhos de teclado específicos para testes golang
+    vim.keymap.set("n", "<leader>tc", ":TestCoverage<CR>", { desc = "Show test coverage" })
   end,
 }
