@@ -46,13 +46,25 @@ return {
       },
     },
     file = {
+      ["Makefile"] = {
+        glyph = "",
+        hl = "MiniIconsRed",
+      },
       ["docker-compose.yml"] = {
         glyph = "󰡨",
-        hl = "MiniIconsBlue",
+        hl = "MiniIconsYellow",
       },
       ["docker-compose.yaml"] = {
         glyph = "󰡨",
-        hl = "MiniIconsBlue",
+        hl = "MiniIconsYellow",
+      },
+      [".dockerignore"] = {
+        glyph = "󰡨",
+        hl = "MiniIconsGrey",
+      },
+      ["go.mod"] = {
+        glyph = "󰟓",
+        hl = "MiniIconsCyan",
       },
       ["eslint.config.js"] = {
         glyph = "󰱺",
@@ -105,45 +117,6 @@ return {
       ["tailwind.config.js"] = {
         glyph = "󱏿",
         hl = "MiniIconsBlue",
-      },
-      [".prettierrc"] = {
-        glyph = "",
-      },
-      [".prettierrc.yml"] = {
-        glyph = "",
-      },
-      [".prettierrc.yaml"] = {
-        glyph = "",
-      },
-      [".prettierrc.json5"] = {
-        glyph = "",
-      },
-      [".prettierrc.js"] = {
-        glyph = "",
-      },
-      [".prettierrc.cjs"] = {
-        glyph = "",
-      },
-      [".prettierrc.mjs"] = {
-        glyph = "",
-      },
-      ["prettierrc.config.mjs"] = {
-        glyph = "",
-      },
-      ["prettierrc.config.cjs"] = {
-        glyph = "",
-      },
-      ["prettierrc.config.js"] = {
-        glyph = "",
-      },
-      ["prettierrc.toml"] = {
-        glyph = "",
-      },
-      [".prettierrc.json"] = {
-        glyph = "",
-      },
-      [".prettierignore"] = {
-        glyph = "",
       },
       [".nvmrc"] = {
         glyph = "󰎙",

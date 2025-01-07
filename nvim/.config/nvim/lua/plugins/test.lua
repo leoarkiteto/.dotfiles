@@ -178,12 +178,12 @@ return {
     }
 
     opts.icons = {
-      -- You can customize these icons if you want
-      passed = "󰄬",
-      running = "󱕷",
-      failed = "󰅖",
+      --   -- You can customize these icons if you want
+      --   passed = "󰄬",
+      --   running = "󱕷",
+      --   failed = "󰅖",
       skipped = "󰒲",
-      unknown = "󰋖",
+      --   unknown = "󰋖",
     }
 
     local function find_coverage_report()
