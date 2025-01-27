@@ -1,9 +1,17 @@
 return {
   "nvim-neotest/neotest",
   dependencies = {
+    "nvim-neotest/nvim-nio",
     "nvim-neotest/neotest-jest",
     "marilari88/neotest-vitest",
-    "fredrikaverpil/neotest-golang",
+    "nvim-lua/plenary.nvim",
+    {
+      "fredrikaverpil/neotest-golang",
+      version = "*",
+      dependencies = {
+        "andythigpen/nvim-coverage",
+      },
+    },
   },
   opts = function(_, opts)
     local function is_nx_project()
@@ -65,7 +73,6 @@ return {
       "--colors", -- Colored output
       "--coverage", -- Disable coverage by default for faster runs
       "--coverageReporters=lcov", -- Disable coverage by default for faster runs
-      "--coverageReporters=html", -- Disable coverage by default for faster runs
       "--no-cache", -- Disable Jest cache
       "--watchAll=false", -- Disable watch mode
       "--testLocationInResults", -- Include location info
@@ -83,17 +90,19 @@ return {
     table.insert(
       opts.adapters,
       require("neotest-golang")({
+        runner = "gotestsum",
         go_test_args = {
-          "-timeout=60s",
+          "-v",
+          "-race",
+          "-count=1",
           "-coverprofile=coverage.out",
-          "-coverpkg=./...",
+        },
+        gotestsum_args = {
+          "--format=testname",
         },
         experimental = {
           test_table = true,
         },
-        filter_dir = function(name, rel_path, root)
-          return name ~= "vendor"
-        end,
       })
     )
 
@@ -156,6 +165,12 @@ return {
     )
 
     -- Configure common neotest options for better output
+    --
+    opts.quickfix = {
+      enabled = true,
+      open = true,
+    }
+
     opts.output = {
       enabled = true,
       open_on_run = true, -- Open output window automatically
@@ -177,15 +192,6 @@ return {
       },
     }
 
-    opts.icons = {
-      --   -- You can customize these icons if you want
-      --   passed = "󰄬",
-      --   running = "󱕷",
-      --   failed = "󰅖",
-      skipped = "󰒲",
-      --   unknown = "󰋖",
-    }
-
     local function find_coverage_report()
       local project_root = vim.fn.getcwd()
       local possible_paths = {
@@ -203,10 +209,21 @@ return {
       return nil
     end
 
+    local function find_go_coverage_report()
+      local current_file = vim.fn.expand("%:p")
+      local dir = vim.fn.fnamemodify(current_file, ":h")
+      return dir .. "/coverage.out"
+    end
+
     vim.api.nvim_create_user_command("TestCoverage", function()
       local file_type = vim.bo.filetype
       if file_type == "go" then
-        vim.cmd("!go tool cover -html=coverage.out")
+        local coverage_path = find_go_coverage_report()
+        if coverage_path then
+          vim.cmd("!" .. string.format("go tool cover -html=%s", coverage_path))
+        else
+          vim.notify("Go coverage report (coverage.out) not found. Run tests with coverage first.", vim.log.levels.WARN)
+        end
       elseif
         file_type == "typescript"
         or file_type == "javascript"
@@ -245,7 +262,6 @@ return {
       end
     end, {})
 
-    -- Configurar atalhos de teclado específicos para testes golang
     vim.keymap.set("n", "<leader>tc", ":TestCoverage<CR>", { desc = "Show test coverage" })
   end,
 }
