@@ -4,6 +4,7 @@ return {
     ensure_installed = {
       "bash",
       "css",
+      "c_sharp",
       "graphql",
       "go",
       "html",

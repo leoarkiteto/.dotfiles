@@ -6,6 +6,14 @@ return {
       typescript = { "prettierd", "prettier", stop_after_first = true },
       javascriptreact = { "prettierd", "prettier", "biome", stop_after_first = true },
       typescriptreact = { "prettierd", "prettier", "biome", stop_after_first = true },
+      cs = { "csharpier" },
+    },
+    formatters = {
+      csharpier = {
+        command = "dotnet",
+        args = { "csharpier", "$FILENAME" },
+        stdin = false,
+      },
     },
   },
 }
