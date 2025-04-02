@@ -5,6 +5,7 @@ return {
     "nvim-neotest/neotest-jest",
     "marilari88/neotest-vitest",
     "nvim-lua/plenary.nvim",
+    "Issafalcon/neotest-dotnet",
     {
       "fredrikaverpil/neotest-golang",
       version = "*",
@@ -22,7 +23,37 @@ return {
       return string.find(file, "/packages/") or string.find(file, "/apps/")
     end
 
+    local function is_dotnet_project()
+      local dir = vim.fn.getcwd()
+      local has_csproj = vim.fn.glob(dir .. "/**/*.csproj") ~= ""
+      local has_sln = vim.fn.glob(dir .. "/**/*.sln") ~= ""
+      local has_fsproj = vim.fn.glob(dir .. "/**/*.fsproj") ~= ""
+
+      return has_csproj or has_sln or has_fsproj
+    end
+
+    local function get_dotnet_project_root(file)
+      local dir = vim.fn.fnamemodify(file, ":h")
+
+      while dir ~= "/" do
+        if vim.fn.glob(dir .. "/*.csproj") ~= "" or vim.fn.glob(dir .. "/*.fsproj") ~= "" then
+          return dir
+        end
+        dir = vim.fn.fnamemodify(dir, ":h")
+      end
+
+      dir = vim.fn.getcwd()
+      if vim.fn.glob(dir .. "/**/*.sln") ~= "" then
+        return dir
+      end
+
+      return vim.fn.getcwd()
+    end
+
     local function get_project_root(file)
+      if is_dotnet_project() and string.format(file, "%.cs$") or string.format(file, "%.fs$") then
+        return get_dotnet_project_root(file)
+      end
       if is_nx_project() then
         return string.match(file, "(.-/[^/]+/[^/]+/)src") or vim.fn.getcwd()
       elseif is_monorepo_path(file) then
@@ -32,6 +63,17 @@ return {
     end
 
     local function get_project_name(file)
+      if is_dotnet_project() and string.format(file, "%.cs$") or string.format(file, "%.fs$") then
+        local project_root = get_dotnet_project_root(file)
+        local csproj_files = vim.fn.glob(project_root .. "/*.csproj")
+        local fsproj_files = vim.fn.glob(project_root .. "/*.fsproj")
+        local proj_file = csproj_files ~= "" and csproj_files or fsproj_files
+
+        if proj_file ~= "" then
+          return vim.fn.fnamemodify(proj_file, ":t:r")
+        end
+      end
+
       local project_root = get_project_root(file)
       return string.match(project_root, "/([^/]+)/src") or ""
     end
@@ -44,6 +86,7 @@ return {
           return config
         end
       end
+
       return nil
     end
 
@@ -86,17 +129,28 @@ return {
       "--no-watch",
     }
 
-    -- Go adapters
+    local default_go_args = {
+      "-v",
+      "-race",
+      "-count=1",
+      "-coverprofile=coverage.out",
+    }
+
+    local default_dotnet_args = {
+      "--verbosity",
+      "detailed",
+      "--logger",
+      "console;verbosity=detailed",
+      "--collect",
+      "XPlat Code Coverage",
+    }
+
+    --==== Go adapters ====--
     table.insert(
       opts.adapters,
       require("neotest-golang")({
         runner = "gotestsum",
-        go_test_args = {
-          "-v",
-          "-race",
-          "-count=1",
-          "-coverprofile=coverage.out",
-        },
+        go_test_args = table.concat(default_go_args, " "),
         gotestsum_args = {
           "--format=testname",
         },
@@ -106,7 +160,7 @@ return {
       })
     )
 
-    -- JavaScript adapters (Jest)
+    --==== JavaScript adapters (Jest) ====--
     table.insert(
       opts.adapters,
       require("neotest-jest")({
@@ -144,11 +198,11 @@ return {
       })
     )
 
-    -- JavaScript adapters (Vitest)
+    --==== JavaScript adapters (Vitest) ====--
     table.insert(
       opts.adapters,
       require("neotest-vitest")({
-        vitestCommand = function()
+        vitestCommand = function(file)
           local pkg_manager = get_package_manager()
           local args = table.concat(default_vitest_args, "")
 
@@ -164,23 +218,49 @@ return {
       })
     )
 
+    --==== .NET adapters ====--
+    table.insert(
+      opts.adapters,
+      require("neotest-dotnet")({
+        dap = { justMyCode = false },
+        dotnet_additional_args = table.concat(default_dotnet_args, " "),
+        custom_project_root = get_dotnet_project_root,
+        discovery_method = "dll",
+        runner = {
+          name = "dotnet",
+          env = {
+            DOTNET_CLI_UI_LANGUAGE = "en-US",
+            DOTNET_NOLOGO = "true",
+          },
+        },
+        filter_options = {
+          filter_cs_files = true,
+          exclusions = {
+            "**/*.exclude_test.cs",
+            "**/obj/**",
+            "**/bin/**",
+          },
+        },
+        output = {
+          enabled = true,
+          open_on_run = true,
+        },
+      })
+    )
+
     -- Configure common neotest options for better output
-    --
     opts.quickfix = {
       enabled = true,
       open = true,
     }
-
     opts.output = {
       enabled = true,
       open_on_run = true, -- Open output window automatically
     }
-
     opts.output_panel = {
       enabled = true,
       open = "botright split | resize 15", -- Open panel at bottom with height 15
     }
-
     opts.summary = {
       enabled = true,
       expand_errors = true, -- Expand error details automatically
@@ -206,13 +286,32 @@ return {
           return full_path
         end
       end
+
       return nil
     end
 
     local function find_go_coverage_report()
       local current_file = vim.fn.expand("%:p")
       local dir = vim.fn.fnamemodify(current_file, ":h")
+
       return dir .. "/coverage.out"
+    end
+
+    local function find_dotnet_coverage_report()
+      local project_root = vim.fn.getcwd()
+      local coverage_dir = vim.fn.glob(project_root .. "/TestResults/*/coverage.cobertura.xml")
+
+      if coverage_dir ~= "" then
+        return coverage_dir
+      end
+
+      local report_path = vim.fn.glob(project_root .. "/**/coverage.xml")
+
+      if report_path ~= "" then
+        return report_path
+      end
+
+      return nil
     end
 
     vim.api.nvim_create_user_command("TestCoverage", function()
@@ -223,6 +322,40 @@ return {
           vim.cmd("!" .. string.format("go tool cover -html=%s", coverage_path))
         else
           vim.notify("Go coverage report (coverage.out) not found. Run tests with coverage first.", vim.log.levels.WARN)
+        end
+      elseif file_type == "cs" or file_type == "fs" then
+        local coverage_path = find_dotnet_coverage_report()
+        if coverage_path then
+          local has_report_gen = vim.fn.executable("reportgenerator") == 1
+          if has_report_gen then
+            local output_dir = vim.fn.getcwd() .. "/CoverageReport"
+            local cmd = string.format(
+              'reportgenerator -reports:"%s" -targetdir:"%s" -reporttypes:Html',
+              coverage_path,
+              output_dir
+            )
+            vim.fn.system(cmd)
+
+            local index_html = output_dir .. "/index.html"
+            if vim.fn.filereadable(index_html) == 1 then
+              if vim.fn.has("mac") == 1 then
+                vim.fn.system("open" .. index_html)
+              elseif vim.fn.has("unix") then
+                vim.fn.system("xdg-open" .. index_html)
+              elseif vim.fn.has("win32") then
+                vim.fn.system("start" .. index_html)
+              end
+            else
+              vim.notify("Failed to generate coverage report", vim.log.levels.ERROR)
+            end
+          else
+            vim.notify(
+              'ReportGenerator not found. Install with "dotnet tool install -g dotnet-reportgenerator-globaltool"',
+              vim.log.levels.WARN
+            )
+          end
+        else
+          vim.notify(".NET coverage report not found. Run tests with coverage first", vim.log.levels.WARN)
         end
       elseif
         file_type == "typescript"

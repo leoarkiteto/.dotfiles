@@ -12,6 +12,8 @@ return {
       },
       -- Golang
       "leoluz/nvim-dap-go",
+      -- .NET
+      "Cliffback/netcoredbg-macOS-arm64.nvim",
     },
     config = function()
       local dap = require("dap")
@@ -177,14 +179,16 @@ return {
         },
       })
 
-      -- ======== C# ======== --
-      local function log_msg(msg, level)
-        level = level or "warn"
-        vim.notify(msg, vim.log.levels[string.upper(level)], {
-          title = "DAP",
-        })
+      -- ======== .NET ======== --
+      local function log_msg(msg)
+        vim.api.nvim_echo({ { msg, "WarningMsg" } }, true, {})
       end
       local netcoredbg_path = vim.fn.stdpath("data") .. "/lazy/netcoredbg-macOS-arm64.nvim/netcoredbg/netcoredbg"
+      log_msg(netcoredbg_path)
+
+      if vim.fn.executable(netcoredbg_path) ~= 1 then
+        log_msg("Warning: netcoredbg not found at " .. netcoredbg_path)
+      end
 
       dap.adapters.coreclr = {
         type = "executable",
@@ -192,49 +196,49 @@ return {
         args = { "--interpreter=vscode" },
       }
 
-      local function find_debug_dll()
-        local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
-        local framework_versions = { "net8.0", "net7.0", "net9.0" }
-        local build_types = { "Debug", "Release" }
-
-        for _, build in ipairs(build_types) do
-          for _, version in ipairs(framework_versions) do
-            local path = string.format("%s/bin/%s/%s/%s.dll", vim.fn.getcwd(), build, version, project_name)
-            if vim.fn.filereadable(path) == 1 then
-              return path
-            end
-          end
-        end
-
-        return nil
-      end
-
+      vim.filetype.add({
+        extension = {
+          cs = "cs",
+        },
+        pattern = {
+          [".*%s.cs$"] = "cs",
+        },
+      })
       dap.configurations.cs = {
         {
           type = "coreclr",
           name = "Launch .NET Core Program",
           request = "launch",
           program = function()
-            local default_dll = find_debug_dll()
-            if not default_dll then
-              log_msg("No .NET Core DLL found in the expected locations", "warn")
-              default_dll = vim.fn.getcwd()
-                .. "/bin/Debug/net9.0/"
-                .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
-                .. ".dll"
+            local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
+            local possible_paths = {
+              string.format("%s/bin/Debug/net7.0/%s.dll", vim.fn.getcwd(), project_name),
+              string.format("%s/bin/Debug/net8.0/%s.dll", vim.fn.getcwd(), project_name),
+              string.format("%s/bin/Debug/net9.0/%s.dll", vim.fn.getcwd(), project_name),
+            }
+            local default_path = nil
+
+            for _, path in ipairs(possible_paths) do
+              if vim.fn.filereadable(path) == 1 then
+                default_path = path
+                break
+              end
             end
-            return vim.fn.input("Path to dll: ", default_dll, "file")
+            if default_path == nil then
+              default_path = possible_paths[1]
+              log_msg("Default DLL path: " .. default_path)
+            end
+
+            return vim.fn.input("Path to dll: ", default_path, "file")
           end,
           cwd = "${workspaceFolder}",
-          stopAtEntry = true, -- Changed to true to ensure it stops at program entry
+          stopAtEntry = true,
           console = "integratedTerminal",
-          justMyCode = false,
-          requireExactSource = false,
+          justMyCode = true,
           logging = {
+            engineLogging = true,
             moduleLoad = true,
             programOutput = true,
-            browserStdOut = true,
-            engineLogging = true,
             exceptions = true,
           },
         },
@@ -243,11 +247,11 @@ return {
           name = "Attach to Process",
           request = "attach",
           processId = require("dap.utils").pick_process,
-          justMyCode = false,
+          sourceMaps = true,
         },
         {
           type = "coreclr",
-          name = "Lauch .NET Core Test",
+          name = "Launch .NET Core Test",
           request = "launch",
           program = function()
             return vim.fn.input("Path to dll: ", vim.fn.getcwd() .. "/bin/Debug/", "file")
