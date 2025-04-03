@@ -8,6 +8,12 @@ return {
   {
     "catppuccin/nvim",
     name = "catppuccin",
+    opts = {
+      styles = {
+        strings = { "italic" },
+        types = { "underline" },
+      },
+    },
   },
   {
     "navarasu/onedark.nvim",
@@ -20,7 +26,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "onedark",
+      colorscheme = "catppuccin-frappe",
     },
   },
 }

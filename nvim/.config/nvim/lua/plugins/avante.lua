@@ -28,6 +28,7 @@ return {
     "MunifTanjim/nui.nvim",
     "saghen/blink.cmp", -- autocompletion for avante commands and mentions
     "echasnovski/mini.icons",
+    "folke/snacks.nvim",
     {
       -- support for image pasting
       "HakonHarnes/img-clip.nvim",
