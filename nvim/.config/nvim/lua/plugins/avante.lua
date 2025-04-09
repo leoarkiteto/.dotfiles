@@ -3,36 +3,33 @@ return {
   event = "VeryLazy",
   version = false, -- Never set this value to "*"! Never!
   opts = {
-    -- add any opts here
-    -- for example
     provider = "ollama",
+    cursor_applying_provider = "ollama",
     ollama = {
       endpoint = "http://127.0.0.1:11434",
       model = "codellama", -- your desired model (or use gpt-4o, etc.)
       timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
-      temperature = 0,
-      max_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
-      --reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
+      opts = {
+        temperature = 0,
+        num_ctx = 20480,
+      },
     },
-    cursor_applying_provider = "ollama",
     behavior = {
       enable_cursor_planning_mode = true,
-      apply_to_current_buffer = true,
+      aplly_to_current_buffer = true,
+      auto_apply_diff_after_generation = true,
     },
-    cursor_behavior = {
-      open_in_current_buffer = true,
-      preserve_cursor_position = true,
+    file_selector = {
+      provider = "snacks",
     },
   },
-  -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
   build = "make",
-  -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
   dependencies = {
     "nvim-treesitter/nvim-treesitter",
     "stevearc/dressing.nvim",
     "nvim-lua/plenary.nvim",
     "MunifTanjim/nui.nvim",
-    "saghen/blink.cmp", -- autocompletion for avante commands and mentions
+    "saghen/blink.cmp",
     "echasnovski/mini.icons",
     "folke/snacks.nvim",
     {
