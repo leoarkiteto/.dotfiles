@@ -17,6 +17,11 @@ return {
     cursor_applying_provider = "ollama",
     behavior = {
       enable_cursor_planning_mode = true,
+      apply_to_current_buffer = true,
+    },
+    cursor_behavior = {
+      open_in_current_buffer = true,
+      preserve_cursor_position = true,
     },
   },
   -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
@@ -24,6 +29,7 @@ return {
   -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
   dependencies = {
     "nvim-treesitter/nvim-treesitter",
+    "stevearc/dressing.nvim",
     "nvim-lua/plenary.nvim",
     "MunifTanjim/nui.nvim",
     "saghen/blink.cmp", -- autocompletion for avante commands and mentions
