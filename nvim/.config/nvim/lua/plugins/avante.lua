@@ -17,7 +17,6 @@ return {
     behavior = {
       enable_cursor_planning_mode = true,
       aplly_to_current_buffer = true,
-      auto_apply_diff_after_generation = true,
     },
     file_selector = {
       provider = "snacks",
@@ -32,6 +31,7 @@ return {
     "saghen/blink.cmp",
     "echasnovski/mini.icons",
     "folke/snacks.nvim",
+    "Kaiser-Yang/blink-cmp-avante",
     {
       -- support for image pasting
       "HakonHarnes/img-clip.nvim",
@@ -57,6 +57,5 @@ return {
       },
       ft = { "markdown", "Avante" },
     },
-    "Kaiser-Yang/blink-cmp-avante",
   },
 }

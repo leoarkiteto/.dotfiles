@@ -5,9 +5,11 @@ return {
     dependencies = {
       "rafamadriz/friendly-snippets",
       "GustavEikass/easy-dotnet.nvim",
-      "yetone/avante.nvim",
+      "Kaiser-Yang/blink-cmp-avante",
     },
     opts = {
+      snippets = { preset = "default" },
+      signature = { enabled = true },
       fuzzy = { implementation = "prefer_rust_with_warning" },
       sources = {
         default = {
