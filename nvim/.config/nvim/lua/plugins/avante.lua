@@ -2,6 +2,17 @@ return {
   "yetone/avante.nvim",
   event = "VeryLazy",
   version = false, -- Never set this value to "*"! Never!
+  init = function()
+    -- Hack for https://github.com/yetone/avante.nvim/issues/1759
+    local chdir = vim.api.nvim_create_augroup("chdir", {})
+    vim.api.nvim_create_autocmd("BufEnter", {
+      group = chdir,
+      nested = true,
+      callback = function()
+        vim.go.autochdir = not vim.bo.filetype:match("^Avante")
+      end,
+    })
+  end,
   opts = {
     provider = "ollama",
     cursor_applying_provider = "ollama",
@@ -17,6 +28,9 @@ return {
     behavior = {
       enable_cursor_planning_mode = true,
       aplly_to_current_buffer = true,
+      buffer_options = {
+        apply_to_current = true,
+      },
     },
     file_selector = {
       provider = "snacks",
@@ -25,7 +39,6 @@ return {
   build = "make",
   dependencies = {
     "nvim-treesitter/nvim-treesitter",
-    "stevearc/dressing.nvim",
     "nvim-lua/plenary.nvim",
     "MunifTanjim/nui.nvim",
     "saghen/blink.cmp",
