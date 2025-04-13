@@ -150,7 +150,8 @@ return {
       opts.adapters,
       require("neotest-golang")({
         runner = "gotestsum",
-        go_test_args = table.concat(default_go_args, " "),
+        gottestsum_cmd = "/Users/leofranca/go/bin/gotestsum",
+        go_test_args = default_go_args,
         gotestsum_args = {
           "--format=testname",
         },
