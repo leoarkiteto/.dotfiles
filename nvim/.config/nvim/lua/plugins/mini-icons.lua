@@ -12,6 +12,10 @@ return {
         glyph = "",
         hl = "MiniIconsGrey",
       },
+      ["md"] = {
+        glyph = "󰍔",
+        hl = "MiniIconsGrey",
+      },
       ["test.ts"] = {
         glyph = "󰙨",
         hl = "MiniIconsBlue",
@@ -44,6 +48,10 @@ return {
         glyph = "󰙨",
         hl = "MiniIconsYellow",
       },
+      ["stories.tsx"] = {
+        glyph = "",
+        hl = "MiniIconsPurple",
+      },
     },
     file = {
       ["Makefile"] = {
@@ -52,11 +60,11 @@ return {
       },
       ["docker-compose.yml"] = {
         glyph = "󰡨",
-        hl = "MiniIconsYellow",
+        hl = "MiniIconsBlue",
       },
       ["docker-compose.yaml"] = {
         glyph = "󰡨",
-        hl = "MiniIconsYellow",
+        hl = "MiniIconsBlue",
       },
       [".dockerignore"] = {
         glyph = "󰡨",
@@ -106,6 +114,30 @@ return {
         glyph = "󰱺",
         hl = "MiniIconsBlue",
       },
+      ["next.config.js"] = {
+        glyph = "",
+        hl = "MiniIconsGrey",
+      },
+      ["next.shared.config.js"] = {
+        glyph = "",
+        hl = "MiniIconsYellow",
+      },
+      ["vitest.workspace.ts"] = {
+        glyph = "",
+        hl = "MiniIconsGreen",
+      },
+      ["vitest.config.ts"] = {
+        glyph = "",
+        hl = "MiniIconsGreen",
+      },
+      ["jest.config.ts"] = {
+        glyph = "",
+        hl = "MiniIconsRed",
+      },
+      ["jest.setup.ts"] = {
+        glyph = "",
+        hl = "MiniIconsGreen",
+      },
       [".eslintignore"] = {
         glyph = "󰱺",
         hl = "MiniIconsBlue",
@@ -118,9 +150,23 @@ return {
         glyph = "󱏿",
         hl = "MiniIconsBlue",
       },
+      ["pnpm-lock.yaml"] = {
+        glyph = "",
+        hl = "MiniIconsOrange",
+      },
+      ["vite.config.ts"] = {
+        glyph = "",
+        hl = "MiniIconsPurple",
+      },
       [".nvmrc"] = {
         glyph = "󰎙",
         hl = "MiniIconsGreen",
+      },
+    },
+    directory = {
+      ["__tests__"] = {
+        glyph = "",
+        hl = "MiniIconsGrey",
       },
     },
   },
