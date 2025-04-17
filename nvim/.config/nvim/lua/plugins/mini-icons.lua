@@ -8,6 +8,10 @@ return {
       },
     },
     extension = {
+      ["cs"] = {
+        glyph = "",
+        hl = "MiniIconsPurple",
+      },
       ["sh"] = {
         glyph = "",
         hl = "MiniIconsGrey",
@@ -57,6 +61,10 @@ return {
       ["Makefile"] = {
         glyph = "",
         hl = "MiniIconsRed",
+      },
+      ["README.md"] = {
+        glyph = "󰍔",
+        hl = "MiniIconsGrey",
       },
       ["docker-compose.yml"] = {
         glyph = "󰡨",
@@ -134,9 +142,25 @@ return {
         glyph = "",
         hl = "MiniIconsRed",
       },
+      ["jest.config.js"] = {
+        glyph = "",
+        hl = "MiniIconsRed",
+      },
       ["jest.setup.ts"] = {
         glyph = "",
         hl = "MiniIconsGreen",
+      },
+      ["jest.setup.js"] = {
+        glyph = "",
+        hl = "MiniIconsGreen",
+      },
+      ["jest.setup.tsx"] = {
+        glyph = "",
+        hl = "MiniIconsGreen",
+      },
+      [".prettierrc.js"] = {
+        glyph = "",
+        hl = "MiniIconsOrange",
       },
       [".eslintignore"] = {
         glyph = "󰱺",
@@ -158,9 +182,33 @@ return {
         glyph = "",
         hl = "MiniIconsPurple",
       },
+      ["postcss.config.js"] = {
+        glyph = "",
+        hl = "MiniIconsRed",
+      },
+      ["cypress.config.ts"] = {
+        glyph = "",
+        hl = "MiniIconsGreen",
+      },
       [".nvmrc"] = {
         glyph = "󰎙",
         hl = "MiniIconsGreen",
+      },
+      ["tsconfig.base.json"] = {
+        glyph = "",
+        hl = "MiniIconsAzure",
+      },
+      ["tsconfig.tools.json"] = {
+        glyph = "",
+        hl = "MiniIconsAzure",
+      },
+      ["tsconfig.storbook.json"] = {
+        glyph = "",
+        hl = "MiniIconsPurple",
+      },
+      ["Program.cs"] = {
+        glyph = "",
+        hl = "MiniIconsAzure",
       },
     },
     directory = {

@@ -21,6 +21,7 @@ return {
           "avante_commands",
           "avante_mentions",
           "avante_files",
+          "dadbod",
         },
         providers = {
           ["easy-dotnet"] = {
@@ -47,6 +48,10 @@ return {
             module = "blink.compat.source",
             score_offset = 100,
             opts = {},
+          },
+          dadbod = {
+            name = "Dadbod",
+            module = "vim_dadbod_completion.blink",
           },
         },
       },

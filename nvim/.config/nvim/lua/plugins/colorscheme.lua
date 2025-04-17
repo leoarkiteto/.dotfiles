@@ -8,7 +8,9 @@ return {
   {
     "catppuccin/nvim",
     name = "catppuccin",
+    optional = true,
     opts = {
+      integrations = { blink_cmp = true },
       styles = {
         strings = { "italic" },
         types = { "underline" },
