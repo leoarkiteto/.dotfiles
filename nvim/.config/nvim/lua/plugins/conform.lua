@@ -36,7 +36,7 @@ return {
     }
 
     -- Define SQL file types
-    local sql_ft = { "sql", "mysql", "plsql" }
+    local sql_ft = { "sql", "mysql", "plsql", 'plsql' }
 
     -- Set formatters by file type
     opts.formatters_by_ft = {

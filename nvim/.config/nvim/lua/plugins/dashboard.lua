@@ -1,10 +1,24 @@
 return {
   "snacks.nvim",
-  opts = function(_, opts)
-    table.insert(
-      opts.dashboard.preset.keys,
-      7,
-      { icon = "󱉯", key = "S", desc = "Select Session", action = require("persistence").select }
-    )
-  end,
+  opts = {
+    dashboard = {
+      preset = {
+        header = [[
+██╗     ███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
+██║     ██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
+██║     █████╗  ██║   ██║██║   ██║██║██╔████╔██║
+██║     ██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║
+███████╗███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
+╚══════╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝
+      ]]
+      },
+      sections = {
+        { section = "header" },
+        { icon = " ", title = "Keymaps", section = "keys", indent = 2, padding = 1 },
+        { icon = " ", title = "Recent Files", section = "recent_files", indent = 2, padding = 1 },
+        { icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
+        { section = "startup" },
+      },
+    }
+  }
 }
