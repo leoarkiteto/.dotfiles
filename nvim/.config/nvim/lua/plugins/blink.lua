@@ -4,7 +4,6 @@ return {
     "saghen/blink.cmp",
     dependencies = {
       "rafamadriz/friendly-snippets",
-      "GustavEikass/easy-dotnet.nvim",
       "Kaiser-Yang/blink-cmp-avante",
     },
     opts = {
@@ -17,20 +16,12 @@ return {
           "snippets",
           "path",
           "buffer",
-          "easy-dotnet",
           "avante_commands",
           "avante_mentions",
           "avante_files",
           "dadbod",
         },
         providers = {
-          ["easy-dotnet"] = {
-            name = "easy-dotnet",
-            enabled = true,
-            module = "easy-dotnet.completion.blink",
-            score_offset = 10000,
-            async = true,
-          },
           avante_commands = {
             name = "avante_commands",
             module = "blink.compat.source",

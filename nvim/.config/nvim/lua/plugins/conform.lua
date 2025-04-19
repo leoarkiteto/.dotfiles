@@ -44,7 +44,7 @@ return {
       typescript = { "prettierd", "prettier", stop_after_first = true },
       javascriptreact = { "prettierd", "prettier", "biome", stop_after_first = true },
       typescriptreact = { "prettierd", "prettier", "biome", stop_after_first = true },
-      cs = { "csharpier", "dotnet_format" },
+      cs = { "csharpier" },
       ["markdown"] = { "prettierd", "prettier", "markdownlint-cli2", "markdown-toc" },
       ["markdown.mdx"] = { "prettierd", "prettier", "markdownlint-cli2", "markdown-toc" },
     }
