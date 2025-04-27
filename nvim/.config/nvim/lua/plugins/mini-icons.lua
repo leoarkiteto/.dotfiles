@@ -213,7 +213,7 @@ return {
     },
     directory = {
       ["__tests__"] = {
-        glyph = "",
+        glyph = "󱞊",
         hl = "MiniIconsGrey",
       },
     },
