@@ -210,6 +210,10 @@ return {
         glyph = "",
         hl = "MiniIconsAzure",
       },
+      [".csharpierrc.json"] = {
+        glyph = "",
+        hl = "MiniIconsGrey",
+      },
     },
     directory = {
       ["__tests__"] = {

@@ -4,12 +4,12 @@ return {
     opts = {
       options = {
         styles = {
-          comments = 'italic',
-          strings = 'italic',
-          types = 'underline'
-        }
-      }
-    }
+          comments = "italic",
+          strings = "italic",
+          types = "underline",
+        },
+      },
+    },
   },
   {
     "ellisonleao/gruvbox.nvim",
@@ -26,13 +26,14 @@ return {
     opts = {
       code_style = {
         strings = "italic",
+        comments = "italic",
       },
     },
   },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "nordfox",
+      colorscheme = "onedark",
     },
   },
 }
