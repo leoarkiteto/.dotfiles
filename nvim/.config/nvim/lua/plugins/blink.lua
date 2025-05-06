@@ -4,7 +4,6 @@ return {
     "saghen/blink.cmp",
     dependencies = {
       "rafamadriz/friendly-snippets",
-      "Kaiser-Yang/blink-cmp-avante",
     },
     opts = {
       snippets = { preset = "default" },
@@ -16,30 +15,9 @@ return {
           "snippets",
           "path",
           "buffer",
-          "avante_commands",
-          "avante_mentions",
-          "avante_files",
           "dadbod",
         },
         providers = {
-          avante_commands = {
-            name = "avante_commands",
-            module = "blink.compat.source",
-            score_offset = 90,
-            opts = {},
-          },
-          avante_mentions = {
-            name = "avante_mentions",
-            module = "blink.compat.source",
-            score_offset = 1000,
-            opts = {},
-          },
-          avante_files = {
-            name = "avante_files",
-            module = "blink.compat.source",
-            score_offset = 100,
-            opts = {},
-          },
           dadbod = {
             name = "Dadbod",
             module = "vim_dadbod_completion.blink",
