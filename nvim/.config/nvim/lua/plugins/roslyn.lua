@@ -1,6 +1,6 @@
 return {
   "seblyng/roslyn.nvim",
-  ft = 'cs',
+  ft = "cs",
   opts = {
     config = {
       cmd = {
@@ -28,7 +28,18 @@ return {
         ["csharp|code_lens"] = {
           dotnet_enable_references_code_lens = true,
         },
+        ["csharp|completion"] = {
+          dotnet_provide_regex_completions = true,
+          dotnet_show_completion_items_from_unimported_namespaces = true,
+          dotnet_show_name_completion_suggestions = true,
+        },
+        ["chsarp|symbol_search"] = {
+          dotnet_search_reference_assemblies = true,
+        },
+        ["chsarp|formatting"] = {
+          dotnet_organize_imports_on_format = true,
+        },
       },
     },
-  }
+  },
 }
