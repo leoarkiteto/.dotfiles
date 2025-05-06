@@ -1,18 +1,11 @@
 return {
   "nvim-neotest/neotest",
   dependencies = {
-    "nvim-neotest/nvim-nio",
     "nvim-neotest/neotest-jest",
+    "nvim-neotest/nvim-nio",
+    "Issafalcon/neotest-dotnet",
     "marilari88/neotest-vitest",
     "nvim-lua/plenary.nvim",
-    "Issafalcon/neotest-dotnet",
-    {
-      "fredrikaverpil/neotest-golang",
-      version = "*",
-      dependencies = {
-        "andythigpen/nvim-coverage",
-      },
-    },
   },
   opts = function(_, opts)
     local function is_nx_project()
@@ -23,37 +16,7 @@ return {
       return string.find(file, "/packages/") or string.find(file, "/apps/")
     end
 
-    local function is_dotnet_project()
-      local dir = vim.fn.getcwd()
-      local has_csproj = vim.fn.glob(dir .. "/**/*.csproj") ~= ""
-      local has_sln = vim.fn.glob(dir .. "/**/*.sln") ~= ""
-      local has_fsproj = vim.fn.glob(dir .. "/**/*.fsproj") ~= ""
-
-      return has_csproj or has_sln or has_fsproj
-    end
-
-    local function get_dotnet_project_root(file)
-      local dir = vim.fn.fnamemodify(file, ":h")
-
-      while dir ~= "/" do
-        if vim.fn.glob(dir .. "/*.csproj") ~= "" or vim.fn.glob(dir .. "/*.fsproj") ~= "" then
-          return dir
-        end
-        dir = vim.fn.fnamemodify(dir, ":h")
-      end
-
-      dir = vim.fn.getcwd()
-      if vim.fn.glob(dir .. "/**/*.sln") ~= "" then
-        return dir
-      end
-
-      return vim.fn.getcwd()
-    end
-
     local function get_project_root(file)
-      if is_dotnet_project() and string.format(file, "%.cs$") or string.format(file, "%.fs$") then
-        return get_dotnet_project_root(file)
-      end
       if is_nx_project() then
         return string.match(file, "(.-/[^/]+/[^/]+/)src") or vim.fn.getcwd()
       elseif is_monorepo_path(file) then
@@ -63,17 +26,6 @@ return {
     end
 
     local function get_project_name(file)
-      if is_dotnet_project() and string.format(file, "%.cs$") or string.format(file, "%.fs$") then
-        local project_root = get_dotnet_project_root(file)
-        local csproj_files = vim.fn.glob(project_root .. "/*.csproj")
-        local fsproj_files = vim.fn.glob(project_root .. "/*.fsproj")
-        local proj_file = csproj_files ~= "" and csproj_files or fsproj_files
-
-        if proj_file ~= "" then
-          return vim.fn.fnamemodify(proj_file, ":t:r")
-        end
-      end
-
       local project_root = get_project_root(file)
       return string.match(project_root, "/([^/]+)/src") or ""
     end
@@ -129,13 +81,6 @@ return {
       "--no-watch",
     }
 
-    local default_go_args = {
-      "-v",
-      "-race",
-      "-count=1",
-      "-coverprofile=coverage.out",
-    }
-
     local default_dotnet_args = {
       "--verbosity",
       "detailed",
@@ -144,21 +89,6 @@ return {
       "--collect",
       "XPlat Code Coverage",
     }
-
-    --==== Go adapters ====--
-    table.insert(
-      opts.adapters,
-      require("neotest-golang")({
-        runner = "gotestsum",
-        go_test_args = default_go_args,
-        gotestsum_args = {
-          "--format=testname",
-        },
-        experimental = {
-          test_table = true,
-        },
-      })
-    )
 
     --==== JavaScript adapters (Jest) ====--
     table.insert(
@@ -233,14 +163,6 @@ return {
             DOTNET_NOLOGO = "true",
           },
         },
-        filter_options = {
-          filter_cs_files = true,
-          exclusions = {
-            "**/*.exclude_test.cs",
-            "**/obj/**",
-            "**/bin/**",
-          },
-        },
         output = {
           enabled = true,
           open_on_run = true,
@@ -290,13 +212,6 @@ return {
       return nil
     end
 
-    local function find_go_coverage_report()
-      local current_file = vim.fn.expand("%:p")
-      local dir = vim.fn.fnamemodify(current_file, ":h")
-
-      return dir .. "/coverage.out"
-    end
-
     local function find_dotnet_coverage_report()
       local project_root = vim.fn.getcwd()
       local coverage_dir = vim.fn.glob(project_root .. "/TestResults/*/coverage.cobertura.xml")
@@ -316,14 +231,7 @@ return {
 
     vim.api.nvim_create_user_command("TestCoverage", function()
       local file_type = vim.bo.filetype
-      if file_type == "go" then
-        local coverage_path = find_go_coverage_report()
-        if coverage_path then
-          vim.cmd("!" .. string.format("go tool cover -html=%s", coverage_path))
-        else
-          vim.notify("Go coverage report (coverage.out) not found. Run tests with coverage first.", vim.log.levels.WARN)
-        end
-      elseif file_type == "cs" or file_type == "fs" then
+      if file_type == "cs" then
         local coverage_path = find_dotnet_coverage_report()
         if coverage_path then
           local has_report_gen = vim.fn.executable("reportgenerator") == 1

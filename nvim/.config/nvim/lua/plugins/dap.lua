@@ -3,15 +3,12 @@ return {
   {
     "mfussenegger/nvim-dap",
     dependencies = {
-      "Cliffback/netcoredbg-macOS-arm64.nvim",
       "mxsdev/nvim-dap-vscode-js",
       {
         "microsoft/vscode-js-debug",
         -- Ensure this matches the version you want
         build = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out",
       },
-      -- Golang
-      "leoluz/nvim-dap-go",
       -- .NET
       "Cliffback/netcoredbg-macOS-arm64.nvim",
     },
@@ -68,7 +65,7 @@ return {
       })
 
       local function get_tsx_path()
-        local global_tsx = vim.fn.trim(vim.fn.system("whick tsx"))
+        local global_tsx = vim.fn.trim(vim.fn.system("which tsx"))
         if vim.v.shell_error == 0 and global_tsx ~= "" then
           return global_tsx
         end
@@ -146,45 +143,11 @@ return {
         end
       end
 
-      -- ======== Go ======== --
-      require("dap-go").setup({
-        -- defaults
-        dap_configurations = {
-          {
-            type = "go",
-            name = "Debug",
-            request = "launch",
-            program = "${file}",
-          },
-          {
-            type = "go",
-            name = "Debug test",
-            request = "launch",
-            mode = "test",
-            program = "${file}",
-          },
-          {
-            type = "go",
-            name = "Debug test (go.mod)",
-            request = "launch",
-            mode = "test",
-            program = "./${relativeFileDirname}",
-          },
-        },
-        -- Additional configurations
-        delve = {
-          path = "dlv",
-          initialize_timeout_sec = 20,
-          port = "${port}",
-        },
-      })
-
       -- ======== .NET ======== --
       local function log_msg(msg)
         vim.api.nvim_echo({ { msg, "WarningMsg" } }, true, {})
       end
       local netcoredbg_path = vim.fn.stdpath("data") .. "/lazy/netcoredbg-macOS-arm64.nvim/netcoredbg/netcoredbg"
-      log_msg(netcoredbg_path)
 
       if vim.fn.executable(netcoredbg_path) ~= 1 then
         log_msg("Warning: netcoredbg not found at " .. netcoredbg_path)
@@ -196,14 +159,6 @@ return {
         args = { "--interpreter=vscode" },
       }
 
-      vim.filetype.add({
-        extension = {
-          cs = "cs",
-        },
-        pattern = {
-          [".*%s.cs$"] = "cs",
-        },
-      })
       dap.configurations.cs = {
         {
           type = "coreclr",
