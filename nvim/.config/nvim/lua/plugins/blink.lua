@@ -17,6 +17,9 @@ return {
           "buffer",
           "dadbod",
         },
+        per_filetype = {
+          codecompanion = { "codecompanion" },
+        },
         providers = {
           dadbod = {
             name = "Dadbod",

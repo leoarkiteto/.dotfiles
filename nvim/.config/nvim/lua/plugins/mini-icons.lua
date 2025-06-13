@@ -86,6 +86,10 @@ return {
         glyph = "󰱺",
         hl = "MiniIconsBlue",
       },
+      ["eslint.config.mjs"] = {
+        glyph = "󰱺",
+        hl = "MiniIconsBlue",
+      },
       [".eslintrc"] = {
         glyph = "󰱺",
         hl = "MiniIconsBlue",
@@ -123,6 +127,10 @@ return {
         hl = "MiniIconsBlue",
       },
       ["next.config.js"] = {
+        glyph = "",
+        hl = "MiniIconsGrey",
+      },
+      ["next.config.ts"] = {
         glyph = "",
         hl = "MiniIconsGrey",
       },
@@ -183,6 +191,10 @@ return {
         hl = "MiniIconsPurple",
       },
       ["postcss.config.js"] = {
+        glyph = "",
+        hl = "MiniIconsRed",
+      },
+      ["postcss.config.mjs"] = {
         glyph = "",
         hl = "MiniIconsRed",
       },

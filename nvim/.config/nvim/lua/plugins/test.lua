@@ -1,11 +1,13 @@
 return {
   "nvim-neotest/neotest",
   dependencies = {
-    "nvim-neotest/neotest-jest",
     "nvim-neotest/nvim-nio",
-    "Issafalcon/neotest-dotnet",
-    "marilari88/neotest-vitest",
     "nvim-lua/plenary.nvim",
+    "antoinemadec/FixCursorHold.nvim",
+    "nvim-treesitter/nvim-treesitter",
+    "nvim-neotest/neotest-jest",
+    "marilari88/neotest-vitest",
+    "Issafalcon/neotest-dotnet",
   },
   opts = function(_, opts)
     local function is_nx_project()
