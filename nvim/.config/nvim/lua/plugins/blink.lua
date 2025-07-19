@@ -1,8 +1,8 @@
 return {
-  { "saghen/blink.compat", lazy = true, opts = {} },
   {
     "saghen/blink.cmp",
     dependencies = {
+      "saghen/blink.compat",
       "rafamadriz/friendly-snippets",
     },
     opts = {

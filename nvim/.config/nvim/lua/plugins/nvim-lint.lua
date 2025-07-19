@@ -2,10 +2,11 @@ return {
   "mfussenegger/nvim-lint",
   opts = {
     linters_by_ft = {
-      javascript = { "eslint_d" },
-      typescript = { "eslint_d" },
-      javascriptreact = { "eslint_d" },
-      typescriptreact = { "eslint_d" },
+      typescript = { "biomejs" },
+      typescriptreact = { "biomejs" },
+      vue = { "biomejs" },
+      json = { "biomejs" },
+      jsonc = { "biomejs" },
       markdown = { "markdownlint-cli2" },
     },
   },
