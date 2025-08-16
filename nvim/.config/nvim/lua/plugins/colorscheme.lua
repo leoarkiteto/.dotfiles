@@ -20,6 +20,14 @@ return {
   {
     "catppuccin/nvim",
     name = "catppuccin",
+    opts = {
+      flavour = "frappe",
+      styles = {
+        comments = { "italic" },
+        strings = { "italic" },
+        types = { "underline" },
+      },
+    },
   },
   {
     "navarasu/onedark.nvim",

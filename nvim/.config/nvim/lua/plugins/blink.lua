@@ -16,6 +16,8 @@ return {
           "path",
           "buffer",
           "dadbod",
+          "avante_commands",
+          "avante_mentions",
         },
         per_filetype = {
           codecompanion = { "codecompanion" },
@@ -24,6 +26,14 @@ return {
           dadbod = {
             name = "Dadbod",
             module = "vim_dadbod_completion.blink",
+          },
+          avante_commands = {
+            name = "avante_commands",
+            module = "blink.compat.source",
+          },
+          avante_mentions = {
+            name = "avante_mentions",
+            module = "blink.compat.source",
           },
         },
       },

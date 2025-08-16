@@ -48,7 +48,7 @@ local formatters = {}
 if is_available("csharpier") then
   formatters.csharpier = {
     command = "csharpier",
-    args = { "format", "--write-stdout" },
+    args = { "format" },
     stdin = true,
   }
 end
@@ -65,7 +65,7 @@ end
 -- SQL formatter (only if in a project with SQL files)
 if is_available("sqlfluff") then
   formatters.sqlfluff = {
-    command = "xmllint",
+    command = "sqlfluff",
     args = { "--format", "--dialect=postgres", "-" },
     stdin = true,
     -- Make cwd optional - fallback to current directory if no config found
@@ -139,7 +139,7 @@ end
 
 return {
   "stevearc/conform.nvim",
-  event = { "BufWritePre" },
+  optional = true,
   opts = {
     formatters = formatters,
     formatters_by_ft = formatters_by_ft,
@@ -153,11 +153,5 @@ return {
 
     -- Notify on format errors
     notify_on_error = true,
-
-    -- Format on save configuration
-    format_on_save = {
-      timeout_ms = 500,
-      lsp_fallback = true,
-    },
   },
 }

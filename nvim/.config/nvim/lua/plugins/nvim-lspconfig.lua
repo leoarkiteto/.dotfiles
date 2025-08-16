@@ -5,10 +5,92 @@ return {
       general = {
         positionEncodings = { "utf-16" },
       },
+      textDocument = {
+        codeAction = {
+          dynamicRegistration = true,
+          codeActionLiteralSupport = {
+            codeActionKind = {
+              valueSet = {
+                "",
+                "quickfix",
+                "refactor",
+                "refactor.extract",
+                "refactor.inline",
+                "refactor.rewrite",
+                "source",
+                "source.organizeImports",
+              },
+            },
+          },
+        },
+      },
     },
     servers = {
+      -- .NET/C# Language Server (Omnisharp)
+      omnisharp = {
+        mason = true, -- Auto-install via Mason
+        root_dir = function(fname)
+          local root = require("lspconfig.util").root_pattern(
+            "*.sln",
+            "*.csproj",
+            "*.fsproj",
+            "*.vbproj",
+            "global.json",
+            "Directory.Build.props",
+            "Directory.Build.targets",
+            "nuget.config",
+            ".git"
+          )(fname)
+
+          -- Fallback to current directory if no project files found
+          return root or vim.fn.getcwd()
+        end,
+        cmd = { "omnisharp", "--languageserver", "--hostPID", tostring(vim.fn.getpid()) },
+        settings = {
+          FormattingOptions = {
+            OrganizeImports = true,
+            EnableEditorConfigSupport = true,
+          },
+          MsBuild = {
+            LoadProjectsOnDemand = true,
+          },
+          RoslynExtensionsOptions = {
+            EnableAnalyzersSupport = true,
+            EnableImportCompletion = true,
+            EnableDecompilationSupport = true,
+            AnalyzeOpenDocumentsOnly = false,
+            EnableEditorConfigSupport = true,
+            DocumentAnalysisTimeoutMs = 30000,
+          },
+          Sdk = {
+            IncludePrereleases = false,
+          },
+          useModerNet = true,
+          enableRoslynAnalyzer = true,
+          EnableEditorConfigSupport = true,
+        },
+        handlers = {
+          -- Only disable semantic tokens if they cause problems, but keep other handlers
+          ["textDocument/semanticTokens/full"] = function()
+            return nil
+          end,
+          ["textDocument/semanticTokens/full/delta"] = function()
+            return nil
+          end,
+          -- Keep inline hints enabled as they don't typically interfere with code actions
+          -- ['textDocument/inlayhint']= function() return nil end,
+        },
+        on_attach = function(client)
+          -- Only disable semantic tokens, keep other capabilities
+          client.server_capabilities.semanticTokensProvider = nil
+        end,
+        -- Add init_options for better startup
+        init_options = {
+          AutomaticWorkspaceInit = true,
+        },
+      },
+      -- Tailwindcss Language Server
       tailwindcss = {
-        -- Tailwindcss Language Server configuration
         root_dir = function(...)
           return require("lspconfig.util").root_pattern(
             "tailwind.config.js",
@@ -68,22 +150,6 @@ return {
                 { "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
               },
             },
-          },
-        },
-      },
-      omnisharp = {
-        settings = {
-          FormattingOptions = {
-            OrganizeImports = true,
-          },
-          MsBuild = {
-            LoadProjectsOnDemand = false,
-          },
-          RoslynExtensionsOptions = {
-            EnableAnalyzersSupport = true,
-            EnableImportCompletion = true,
-            EnableDecompilationSupport = true,
-            AnalyzeOpenDocumentsOnly = false,
           },
         },
       },
