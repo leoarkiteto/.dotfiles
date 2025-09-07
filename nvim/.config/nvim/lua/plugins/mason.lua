@@ -3,15 +3,17 @@ return {
   opts = {
     ensure_installed = {
       -- .NET Development Stack
-      "omnisharp", -- C# LSP server
+      "omnisharp", -- C# LSP server (fallback)
+      -- Note: csharp-ls (Roslyn-based alternative) must be installed via: dotnet tool install --global csharp-ls
       "netcoredbg", -- .NET debugger
       "csharpier", -- C# formatter
 
       -- Web Development (for full-stack .NET projects)
-      "typescript-language-server",
+      -- "typescript-language-server",
       "html-lsp", -- HTML LSP
       "css-lsp", -- CSS LSP
-      "biome", -- JS/TS formatter and linter
+      "biome", -- JS/TS formatter
+      "eslint_d", -- Fast ESLint daemon for linting
 
       -- Database (common in .NET projects)
       "sqlls", -- SQL LSP
@@ -59,10 +61,5 @@ return {
         package:install()
       end
     end
-
-    -- Show .NET development status
-    vim.schedule(function()
-      vim.notify("🔧Mason: .NET development tools configured", vim.log.levels.INFO)
-    end)
   end,
 }

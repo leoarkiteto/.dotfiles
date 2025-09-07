@@ -1,17 +1,5 @@
 return {
   {
-    "EdenEast/nightfox.nvim",
-    opts = {
-      options = {
-        styles = {
-          comments = "italic",
-          strings = "italic",
-          types = "underline",
-        },
-      },
-    },
-  },
-  {
     "ellisonleao/gruvbox.nvim",
   },
   {
@@ -20,8 +8,8 @@ return {
   {
     "catppuccin/nvim",
     name = "catppuccin",
+    priority = 1000,
     opts = {
-      flavour = "frappe",
       styles = {
         comments = { "italic" },
         strings = { "italic" },
@@ -41,7 +29,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "onedark",
+      colorscheme = "gruvbox",
     },
   },
 }

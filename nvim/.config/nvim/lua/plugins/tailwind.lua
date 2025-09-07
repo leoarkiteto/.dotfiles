@@ -100,7 +100,7 @@ return {
       "astro",
     },
     keys = {
-      { "<leader>ts", "<cmd>TailwindSort<cr>", desc = "Sort Tailwind classes" },
+      { "<leader>TS", "<cmd>TailwindSort<cr>", desc = "Sort Tailwind classes" },
     },
     opts = {
       document_color = {

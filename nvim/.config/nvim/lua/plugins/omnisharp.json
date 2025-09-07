@@ -1,0 +1,15 @@
+{
+  "RoslynExtensionsOptions": {
+    "inlayHintOptions": {
+      "enableForParameters": false,
+      "enableForTypes": false,
+      "enableForLiteralParameters": false,
+      "enableForIndexerParameters": false,
+      "enableForObjectCreationParameters": false,
+      "enableForOtherParameters": false,
+      "supressForParametersThatDifferOnlyBySuffix": true,
+      "supressForParametersThatMatchMethodIntent": true,
+      "supressForParametersThatMatchArgumentName": true
+    }
+  }
+}

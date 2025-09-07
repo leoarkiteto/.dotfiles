@@ -23,72 +23,108 @@ return {
             },
           },
         },
+        -- Completetly disable inlay hints for all servers
+        inlayHint = nil,
       },
     },
     servers = {
-      -- .NET/C# Language Server (Omnisharp)
-      omnisharp = {
-        mason = true, -- Auto-install via Mason
-        root_dir = function(fname)
-          local root = require("lspconfig.util").root_pattern(
-            "*.sln",
-            "*.csproj",
-            "*.fsproj",
-            "*.vbproj",
-            "global.json",
-            "Directory.Build.props",
-            "Directory.Build.targets",
-            "nuget.config",
-            ".git"
-          )(fname)
+      -- .NET/C# Language Server (csharp-ls) - only if available
+      csharp_ls = vim.fn.executable("csharp-ls") == 1
+          and {
+            handlers = {
+              -- Disable inlay hints as they cause positioning errors with csharp-ls
+              ["textDocument/inlayHint"] = function()
+                return { result = {} }
+              end,
+            },
+            on_attach = function(client)
+              -- Disable inlay hint capability to prevent requests from being sent
+              client.server_capabilities.inlayHintProvider = nil
+            end,
+          }
+        or nil,
 
-          -- Fallback to current directory if no project files found
-          return root or vim.fn.getcwd()
-        end,
-        cmd = { "omnisharp", "--languageserver", "--hostPID", tostring(vim.fn.getpid()) },
-        settings = {
-          FormattingOptions = {
-            OrganizeImports = true,
-            EnableEditorConfigSupport = true,
-          },
-          MsBuild = {
-            LoadProjectsOnDemand = true,
-          },
-          RoslynExtensionsOptions = {
-            EnableAnalyzersSupport = true,
-            EnableImportCompletion = true,
-            EnableDecompilationSupport = true,
-            AnalyzeOpenDocumentsOnly = false,
-            EnableEditorConfigSupport = true,
-            DocumentAnalysisTimeoutMs = 30000,
-          },
-          Sdk = {
-            IncludePrereleases = false,
-          },
-          useModerNet = true,
-          enableRoslynAnalyzer = true,
-          EnableEditorConfigSupport = true,
-        },
-        handlers = {
-          -- Only disable semantic tokens if they cause problems, but keep other handlers
-          ["textDocument/semanticTokens/full"] = function()
-            return nil
-          end,
-          ["textDocument/semanticTokens/full/delta"] = function()
-            return nil
-          end,
-          -- Keep inline hints enabled as they don't typically interfere with code actions
-          -- ['textDocument/inlayhint']= function() return nil end,
-        },
-        on_attach = function(client)
-          -- Only disable semantic tokens, keep other capabilities
-          client.server_capabilities.semanticTokensProvider = nil
-        end,
-        -- Add init_options for better startup
-        init_options = {
-          AutomaticWorkspaceInit = true,
-        },
-      },
+      -- .NET/C# Language Server (Omnisharp) - fallback when csharp-ls not available
+      omnisharp = vim.fn.executable("csharp-ls") == 0
+          and {
+            mason = true, -- Auto-install via Mason
+            root_dir = function(fname)
+              local root = require("lspconfig.util").root_pattern(
+                "*.sln",
+                "*.csproj",
+                "*.fsproj",
+                "*.vbproj",
+                "global.json",
+                "Directory.Build.props",
+                "Directory.Build.targets",
+                "nuget.config",
+                ".git"
+              )(fname)
+
+              -- Fallback to current directory if no project files found
+              return root or vim.fn.getcwd()
+            end,
+            cmd = { "omnisharp", "--languageserver", "--hostPID", tostring(vim.fn.getpid()) },
+            settings = {
+              FormattingOptions = {
+                OrganizeImports = true,
+                EnableEditorConfigSupport = true,
+              },
+              MsBuild = {
+                LoadProjectsOnDemand = true,
+              },
+              RoslynExtensionsOptions = {
+                EnableAnalyzersSupport = true,
+                EnableImportCompletion = true,
+                EnableDecompilationSupport = true,
+                AnalyzeOpenDocumentsOnly = false,
+                EnableEditorConfigSupport = true,
+                DocumentAnalysisTimeoutMs = 30000,
+                -- Completetly disable inlay hints at the server level
+                inlayHintsOptions = {
+                  enableForParameters = false,
+                  enableForTypes = false,
+                  enableForLiteralParameters = false,
+                  enableForIndexerParameters = false,
+                  enableForObjectCreationParameters = false,
+                  enableForOtherParameters = false,
+                  suppressForParametersThatDifferOnlyBySuffix = true,
+                  suppressForParametersThatMatchIntent = true,
+                  suppressForParametersThatArgumentName = true,
+                },
+              },
+              Sdk = {
+                IncludePrereleases = false,
+              },
+              useModerNet = true,
+              enableRoslynAnalyzer = true,
+              EnableEditorConfigSupport = true,
+            },
+            handlers = {
+              -- Only disable semantic tokens if they cause problems, but keep other handlers
+              ["textDocument/semanticTokens/full"] = function()
+                return nil
+              end,
+              ["textDocument/semanticTokens/full/delta"] = function()
+                return nil
+              end,
+              -- Didable inlay hints as they cause positioning errors with omnisharp
+              ["textDocument/inlayHint"] = function()
+                return { result = {} }
+              end,
+            },
+            on_attach = function(client)
+              -- Only disable semantic tokens, keep other capabilities
+              client.server_capabilities.semanticTokensProvider = nil
+              -- Disable inlay hints capability to prevent requests from being sent
+              client.server_capabilities.inlayHintProvider = nil
+            end,
+            -- Add init_options for better startup
+            init_options = {
+              AutomaticWorkspaceInit = true,
+            },
+          }
+        or nil,
       -- Tailwindcss Language Server
       tailwindcss = {
         root_dir = function(...)
