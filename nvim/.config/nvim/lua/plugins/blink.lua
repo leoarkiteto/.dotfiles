@@ -4,9 +4,10 @@ return {
     dependencies = {
       "saghen/blink.compat",
       "rafamadriz/friendly-snippets",
+      "L3MON4D3/LuaSnip",
     },
     opts = {
-      snippets = { preset = "default" },
+      snippets = { preset = "luasnip" },
       signature = { enabled = true },
       fuzzy = { implementation = "prefer_rust_with_warning" },
       sources = {

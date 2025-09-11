@@ -9,10 +9,10 @@ return {
       "csharpier", -- C# formatter
 
       -- Web Development (for full-stack .NET projects)
-      -- "typescript-language-server",
       "html-lsp", -- HTML LSP
       "css-lsp", -- CSS LSP
       "biome", -- JS/TS formatter
+      "prettierd", -- HTML/CSS/JS formatter daemon (faster than prettier)
       "eslint_d", -- Fast ESLint daemon for linting
 
       -- Database (common in .NET projects)
@@ -48,16 +48,16 @@ return {
   config = function(_, opts)
     require("mason").setup(opts)
 
-    -- Ensure .NET tools are prioritized
+    -- Ensure critical development tools are prioritized
     local registry = require("mason-registry")
 
-    -- Auto-install critical .NET tools if missing
-    local critical_tools = { "omnisharp", "netcoredbg", "csharpier" }
+    -- Auto-install critical .NET and web tools if missing
+    local critical_tools = { "omnisharp", "netcoredbg", "csharpier", "prettierd", "eslint_d" }
 
     for _, tool in ipairs(critical_tools) do
       local package = registry.get_package(tool)
       if not package:is_installed() then
-        vim.notify(string.format("Installing critical .NET tool: %s", tool), vim.log.levels.INFO)
+        vim.notify(string.format("Installing critical development tool: %s", tool), vim.log.levels.INFO)
         package:install()
       end
     end

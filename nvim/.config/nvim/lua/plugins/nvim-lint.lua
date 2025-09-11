@@ -24,7 +24,7 @@ local function has_eslint_config(file_path)
   while dir and dir ~= "/" do
     -- Check for eslint config files
     for _, config_file in ipairs(eslint_configs) do
-      if vim.fn.filereadable(vim.fn.join({ dir, config_file }, "/")) then
+      if vim.fn.filereadable(vim.fn.join({ dir, config_file }, "/")) == 1 then
         return true
       end
     end
@@ -53,9 +53,11 @@ end
 ---@param file_path string
 ---@return table
 local function get_web_linters(file_path)
+  -- Try eslint_d first, fallback to biome for projedts without eslint config
   if has_eslint_config(file_path) then
     return { "eslint_d" }
   else
+    -- For projects without eslint, use biome as fallback
     return { "biomejs" }
   end
 end
@@ -67,14 +69,14 @@ return {
       -- .NET/C# linting
       cs = { "dotnet_format" }, -- Use dotnet format for C# linting
 
-      -- Web technologies (will be dynamically updated)
-      typescript = { "biomejs" }, -- Default fallback
-      typescriptreact = { "biomejs" },
-      javascript = { "biomejs" },
-      javascriptreact = { "biomejs" },
-      vue = { "biomejs" },
-      json = { "biomejs" }, -- Always use Biome for JSON (faster ans simpler)
-      jsonc = { "biomejs" },
+      -- Web technologies (prefer eslint_d, fallback to Biome for non-eslint projects)
+      typescript = { "eslint_d" },
+      typescriptreact = { "eslint_d" },
+      javascript = { "eslint_d" },
+      javascriptreact = { "eslint_d" },
+      vue = { "eslint_d" },
+      json = { "eslint_d" }, -- ESLint can handle JSON with proper config
+      jsonc = { "eslint_d" },
 
       -- Database
       sql = { "sqlfluff" },
@@ -154,7 +156,7 @@ return {
       end
     end
 
-    -- auto-lint on save and text change
+    -- Auto-lint on save and text change
     local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
 
     vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {

@@ -165,7 +165,7 @@ end
 
 -- XML (only if available)
 if is_available("xmllint") then
-  formatters_by_ft.xmls = { "xmllint" }
+  formatters_by_ft.xml = { "xmllint" }
 end
 
 -- Lua (only if available)
@@ -216,4 +216,7 @@ return {
     -- Notify on format errors
     notify_on_error = true,
   },
+
+  -- Notify on format errors
+  notify_on_error = true,
 }
