@@ -17,9 +17,11 @@ local function filter_available_formatters(formatters, context)
   local available = {}
 
   -- Known commad mappings for formatters
-  local formatter_commads = {
+  local formatter_commands = {
     biome = "biome",
-    prettier = "prettier",
+    prettierd = "prettierd",
+    prettier = "prettier", -- Keep as fallback
+    cshtml_formatter = true, -- Custom formatter always available
     stylua = "stylua",
     yamlfmt = "yamlfmt",
     csharpier = "csharpier",
@@ -30,7 +32,7 @@ local function filter_available_formatters(formatters, context)
   }
 
   for _, formatter in ipairs(formatters) do
-    local cmd = formatter_commads[formatter]
+    local cmd = formatter_commands[formatter]
     local is_cmd_available = cmd == true or is_available(cmd)
 
     if is_cmd_available then
@@ -148,20 +150,37 @@ end
 
 local formatters_by_ft = {}
 
--- Web technologies (prefer biome, fallback to prettier)
-local web_filetypes = { "html", "typescript", "typescriptreact", "javascript", "javascriptreact", "json", "jssonc" }
+-- Web technologies (prefer prettierd, fallback to prettier, then biome)
+local web_filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact", "json", "jssonc" }
 for _, ft in ipairs(web_filetypes) do
-  formatters_by_ft[ft] = function(bufnr)
-    local context = { filename = vim.api.nvim_buf_get_name(bufnr) }
-    local available = filter_available_formatters({ "biome", "prettier" }, context)
+  formatters_by_ft[ft] = function()
+    local available = filter_available_formatters({ "prettierd", "prettier", "biome" })
     return #available > 0 and { available[1] } or {}
   end
 end
+
+-- HTML files (prefer prettierd for fast, comprehensive HTML support)
+formatters_by_ft.html = function()
+  local available = filter_available_formatters({ "prettierd", "prettier" })
+  return #available > 0 and { available[1] } or {}
+end
+
+-- .cshtml files (Razor views - use custom formatter with HTML parser)
+formatters_by_ft.cshmtl = { "cshtml_formatter" }
 
 -- C# (only if available)
 if is_available("csharpier") then
   formatters_by_ft.cs = { "csharpier" }
 end
+
+-- Custom formatter for .cshtml files (force HTML parser)
+formatters.cshtml_formatter = {
+  command = function()
+    return is_available("prettierd") and "prettierd" or "prettier"
+  end,
+  args = { "--parser", "html" },
+  stdin = true,
+}
 
 -- XML (only if available)
 if is_available("xmllint") then
@@ -177,8 +196,8 @@ end
 formatters_by_ft.markdown = { "injected" }
 formatters_by_ft["markdow.mdx"] = { "injected" }
 
--- YAML (prefer yamlfmt, fallback to prettier)
-local yaml_available = filter_available_formatters({ "yamlfmt", "prettier" })
+-- YAML (prefer yamlfmt, fallback to prettierd, then prettier)
+local yaml_available = filter_available_formatters({ "yamlfmt", "prettierd", "prettier" })
 if #yaml_available > 0 then
   formatters_by_ft.yml = { yaml_available[1] }
   formatters_by_ft.yaml = { yaml_available[1] }
