@@ -166,7 +166,7 @@ formatters_by_ft.html = function()
 end
 
 -- .cshtml files (Razor views - use custom formatter with HTML parser)
-formatters_by_ft.cshmtl = { "cshtml_formatter" }
+formatters_by_ft.cshtml = { "cshtml_formatter" }
 
 -- C# (only if available)
 if is_available("csharpier") then

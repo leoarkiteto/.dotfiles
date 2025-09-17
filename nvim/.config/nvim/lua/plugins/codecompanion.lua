@@ -42,7 +42,7 @@ return {
         },
       },
       diff = {
-        provider = "mini_diff",
+        provider = "gitsigns",
       },
     },
   },

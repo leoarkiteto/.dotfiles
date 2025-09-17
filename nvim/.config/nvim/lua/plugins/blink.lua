@@ -20,9 +20,6 @@ return {
           "avante_commands",
           "avante_mentions",
         },
-        per_filetype = {
-          codecompanion = { "codecompanion" },
-        },
         providers = {
           dadbod = {
             name = "Dadbod",
