@@ -6,14 +6,23 @@ return {
   },
   opts = {
     code = {
+      enabled = true,
       sign = true,
     },
     heading = {
+      enabled = true,
       sign = true,
       icons = { "󰲡", "󰲣", "󰲥", "󰲧", "󰲩", "󰲫" },
     },
     checkbox = {
-      enable = true,
+      enabled = true,
+      bullet = true,
+      unchecked = {
+        icon = "󰄱 ",
+      },
+      checked = {
+        icon = "󰱒 ",
+      },
     },
   },
 }

@@ -6,6 +6,10 @@ return {
         glyph = "󰡨",
         hl = "MiniIconsBlue",
       },
+      Makefile = {
+        glyph = "",
+        hl = "MiniIconsRed",
+      },
     },
     extension = {
       ["cs"] = {
@@ -58,10 +62,6 @@ return {
       },
     },
     file = {
-      ["Makefile"] = {
-        glyph = "",
-        hl = "MiniIconsRed",
-      },
       ["README.md"] = {
         glyph = "󰍔",
         hl = "MiniIconsGrey",
