@@ -1,6 +1,11 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:/.composer/vendor/bin:$PATH
 
+# Path Colima/Docker
+export DOCKER_HOST="unix:///Users/leofranca/.colima/default/docker.sock"
+export DOCKER_BUILDKIT=0
+export DOCKER_DOCKER_CLI_BUILD=0
+
 # Path nvm
 export NVM_DIR="$HOME/.nvm"
     [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" # This loads nvm
@@ -17,6 +22,9 @@ export VISUAL='nvim'
 export PATH="$PATH:$HOME/.dotnet/tools"
 export DOTNET_ROOT="/usr/local/share/dotnet"
 export PATH="$DOTNET_ROOT:$PATH"
+
+# Postgres
+export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
