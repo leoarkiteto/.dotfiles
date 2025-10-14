@@ -8,6 +8,11 @@ return {
       "netcoredbg", -- .NET debugger
       "csharpier", -- C# formatter
 
+      -- Flutter/Dart Development Stack
+      -- Note: dartls comes with Dart SDK, install via: brew install dart (macOS) or download from dart.dev
+      -- dart-debug-adapter is available via Mason
+      "dart-debug-adapter", -- Dart debugger
+
       -- Web Development (for full-stack .NET projects)
       "html-lsp", -- HTML LSP
       "css-lsp", -- CSS LSP
@@ -52,7 +57,7 @@ return {
     local registry = require("mason-registry")
 
     -- Auto-install critical .NET and web tools if missing
-    local critical_tools = { "omnisharp", "netcoredbg", "csharpier", "prettierd", "eslint_d" }
+    local critical_tools = { "omnisharp", "netcoredbg", "csharpier", "prettierd", "eslint_d", "dart-debug-adapter" }
 
     for _, tool in ipairs(critical_tools) do
       local package = registry.get_package(tool)

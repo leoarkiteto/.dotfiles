@@ -28,6 +28,7 @@ local function filter_available_formatters(formatters, context)
     xmllint = "xmllint",
     sqlfluff = "sqlfluff",
     shfmt = "shfmt",
+    black = "black",
     injected = true,
   }
 
@@ -212,6 +213,34 @@ end
 if is_available("shfmt") then
   formatters_by_ft.sh = { "shfmt" }
   formatters_by_ft.bash = { "shfmt" }
+end
+
+-- Dart/Flutter files (use dart format)
+if is_available("dart") then
+  formatters_by_ft.dart = { "dart_format" }
+end
+
+-- Python files (use black)
+if is_available("black") then
+  formatters_by_ft.black = { "black" }
+end
+
+-- Dart formatter
+if is_available("dart") then
+  formatters.dart_format = {
+    command = "dart",
+    args = { "format" },
+    stdin = true,
+  }
+end
+
+-- Python formatter
+if is_available("black") then
+  formatters.black = {
+    command = "black",
+    args = { "--stdin-filename", "$FILENAME", "-" },
+    stdin = true,
+  }
 end
 
 -- ============================================

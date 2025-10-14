@@ -214,6 +214,102 @@ return {
           },
         },
       },
+      -- Dart Language Server for Flutter development
+      -- Note: dartls comes with Dart SDK, install via: brew install dart (macOS) or download from dart.dev
+      dartls = vim.fn.executable("dart") == 1
+          and {
+            root_dir = function(fname)
+              return require("lspconfig.util").root_pattern(
+                "pubspec.yaml",
+                "pubspec.yml",
+                "analysis_options.yaml",
+                ".git"
+              )(fname)
+            end,
+            settings = {
+              dart = {
+                enableSdkFormater = true,
+                lineLength = 120,
+                completeFunctionCalls = true,
+                showTodos = true,
+                analysisExcludeFolders = {},
+                updateImportOnRename = true,
+                enableSnippets = true,
+                -- Add robust error handling settings
+                analysisSeverFolding = true,
+                analysisSeverSnippets = true,
+                -- Reduce analysis server load to prevent crashes
+                onlyAnalyzeProjectsWithOpenFiles = true,
+                -- Disable some features that can cause RangeError issues
+                enableServerSnippets = false,
+                -- Add timeout settings
+                analysisServerTimeout = 30,
+              },
+            },
+            init_options = {
+              onlyAnalyzeProjectsWithOpenFiles = true,
+              suggestFromUnimportedLibraries = true,
+              closingLabels = true,
+              -- Add more robust initialization options
+              enableSnippets = false, -- Disable snippets to reduce complexity
+              enableServerSnippets = false,
+            },
+            -- Add error handling and recovery
+            handlers = {
+              -- Handle text document changes more gracefully
+              ["textDocument/didChange"] = function(err, result, ctx, config)
+                -- Add error handling for didChange to prevent RangeError crashes
+                local ok, res = pcall(function()
+                  return vim.lsp.handlers["textDocument/didChange"](err, result, ctx, config)
+                end)
+                if not ok then
+                  vim.notify("Dart LSP didChange error: " .. tostring(res), vim.log.levels.WARN)
+                  -- Restart the client if it's consistently failing
+                  vim.defer_fn(function()
+                    vim.cmd("LspRestart")
+                  end, 1000)
+                end
+                return res
+              end,
+            },
+            on_attach = function(client, bufnr)
+              -- Add client restart capability
+              local function restart_dartls()
+                vim.notify("Restarting Dart LSP...", vim.log.levels.INFO)
+                vim.cmd("LspRestart")
+              end
+
+              -- Add keymap to manually restart dartls if needed
+              vim.keymap.set("n", "<leader>dr", restart_dartls, {
+                buffer = bufnr,
+                desc = "Restart Dart LSP",
+                silent = true,
+              })
+
+              -- Monitor for client errors and restart if needed
+              client.on_exit = function(code, signal)
+                if code ~= 0 or signal ~= 0 then
+                  vim.notify(
+                    "Dart LSP exited unexpectedly (code: " .. code .. ", signal: " .. signal .. "). Restarting...",
+                    vim.log.levels.WARN
+                  )
+                  vim.defer_fn(restart_dartls, 2000)
+                end
+              end
+            end,
+            --- Add more robust capabilities
+            capabilities = {
+              textDocument = {
+                -- Disable some features that can cause issues
+                inlayHint = nil,
+                -- Reduce semantic token complexity
+                semantiTokens = {
+                  dynamicRegistration = false,
+                },
+              },
+            },
+          }
+        or nil,
       sqlls = {
         cmd = { "sql-language-server", "up", "--method", "stdio" },
         filetypes = { "sql", "mysql", "plsql" },
