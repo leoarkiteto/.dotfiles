@@ -65,7 +65,7 @@ return {
         },
         completion = {
           modes = {
-            i = { "C-x>" },
+            i = { "<C-x>" },
           },
         },
       },
@@ -124,7 +124,7 @@ return {
         callback = "mcphub.extensions.codecompanion",
         opts = {
           make_tools = true,
-          show_server_tolls_in_chat = true,
+          show_server_tools_in_chat = true,
           make_vars = true,
           make_slash_commands = true,
           show_result_in_chat = true,
@@ -135,7 +135,7 @@ return {
   keys = {
     {
       "<C-a>",
-      "<cmd>CodeCompanionActins<CR>",
+      "<cmd>CodeCompanionActions<CR>",
       desc = "Open the action palette",
       mode = { "n", "v" },
     },

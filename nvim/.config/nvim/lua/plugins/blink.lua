@@ -53,6 +53,7 @@ return {
                   local icon = require("lspkind").symbolic(ctx.kind, { mode = "symbol" })
                   return icon .. ctx.icon_gap
                 end,
+
                 -- Optionally, use the highlight groups from mini.icons
                 -- You can also add the same function for `kind.highlight` if you want to
                 -- keep the highlight groups in sync with the icons.
