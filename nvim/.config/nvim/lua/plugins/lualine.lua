@@ -6,7 +6,22 @@ return {
     },
     sections = {
       lualine_a = { "mode", require("easy-dotnet.ui-modules.jobs").lualine },
-      lualine_b = { "branch", "diff", "diagnostics" },
+      lualine_b = {
+        "branch",
+        {
+          "diff",
+          source = function()
+            local summary = vim.b.minidiff_summary
+            return summary
+              and {
+                added = summary.add,
+                modified = summary.change,
+                removed = summary.delete,
+              }
+          end,
+        },
+        "diagnostics",
+      },
       lualine_c = {
         {
           "filename",

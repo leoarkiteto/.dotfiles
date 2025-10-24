@@ -1,4 +1,3 @@
-local mcphub = require("mcphub")
 return {
   "olimorris/codecompanion.nvim",
   cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionActions" },
