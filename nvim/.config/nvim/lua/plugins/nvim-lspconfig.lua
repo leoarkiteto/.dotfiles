@@ -113,7 +113,7 @@ return {
                 return { result = {} }
               end,
             },
-            on_attach = function(client)
+            on_attach = function(client, bufnr)
               -- Only disable semantic tokens, keep other capabilities
               client.server_capabilities.semanticTokensProvider = nil
               -- Disable inlay hints capability to prevent requests from being sent
@@ -332,6 +332,10 @@ return {
             },
           },
         },
+      },
+      gdscript = {
+        cmd = { "ncat", "localhost", "6005" },
+        filetypes = { "gdscript" },
       },
     },
   },

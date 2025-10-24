@@ -5,7 +5,7 @@ return {
       theme = "auto",
     },
     sections = {
-      lualine_a = { "mode" },
+      lualine_a = { "mode", require("easy-dotnet.ui-modules.jobs").lualine },
       lualine_b = { "branch", "diff", "diagnostics" },
       lualine_c = {
         {

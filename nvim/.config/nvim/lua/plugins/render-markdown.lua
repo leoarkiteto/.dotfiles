@@ -5,14 +5,21 @@ return {
     "nvim-mini/mini.icons",
   },
   opts = {
+    file_types = { "markdown", "codecompanion" },
+    completions = {
+      blink = { enabled = true },
+    },
     code = {
       enabled = true,
       sign = true,
+      language = true,
     },
     heading = {
       enabled = true,
+      position = "left",
+      right_pad = 10,
       sign = true,
-      icons = { "󰲡", "󰲣", "󰲥", "󰲧", "󰲩", "󰲫" },
+      icons = { "󰇊 ", "󰇋 ", "󰇌 ", "󰇍 ", "󰇎 ", "󰇏 " },
     },
     checkbox = {
       enabled = true,

@@ -5,7 +5,9 @@ return {
       "saghen/blink.compat",
       "rafamadriz/friendly-snippets",
       "L3MON4D3/LuaSnip",
+      "nvim-mini/mini.icons",
     },
+    specs = { "Kaiser-Yang/blink-cmp-avante" },
     opts = {
       snippets = { preset = "luasnip" },
       signature = { enabled = true },
@@ -17,21 +19,18 @@ return {
           "path",
           "buffer",
           "dadbod",
-          "avante_commands",
-          "avante_mentions",
+          "easy-dotnet",
         },
         providers = {
           dadbod = {
             name = "Dadbod",
             module = "vim_dadbod_completion.blink",
           },
-          avante_commands = {
-            name = "avante_commands",
-            module = "blink.compat.source",
-          },
-          avante_mentions = {
-            name = "avante_mentions",
-            module = "blink.compat.source",
+          ["easy-dotnet"] = {
+            name = "easy-dotnet",
+            module = "easy-dotnet.completion.blink",
+            score_offset = 10000,
+            async = true,
           },
         },
       },
@@ -41,20 +40,48 @@ return {
             components = {
               kind_icon = {
                 text = function(ctx)
-                  local kind_icon, _, _ = require("mini.icons").get("lsp", ctx.kind)
-                  return kind_icon
+                  if vim.tbl_contains({ "Path" }, ctx.source_name) then
+                    local ok, mini_icons = pcall(require, "mini.icons")
+                    if ok and mini_icons and mini_icons.get_icon then
+                      local mini_icon, _ = mini_icons.get_icon(ctx.item.data.type, ctx.label)
+                      if mini_icon then
+                        return mini_icon .. ctx.icon_gap
+                      end
+                    end
+                  end
+
+                  local icon = require("lspkind").symbolic(ctx.kind, { mode = "symbol" })
+                  return icon .. ctx.icon_gap
                 end,
-                -- (optional) use highlights from mini.icons
+                -- Optionally, use the highlight groups from mini.icons
+                -- You can also add the same function for `kind.highlight` if you want to
+                -- keep the highlight groups in sync with the icons.
                 highlight = function(ctx)
-                  local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
-                  return hl
+                  if vim.tbl_contains({ "Path" }, ctx.source_name) then
+                    local ok, mini_icons = pcall(require, "mini.icons")
+                    if ok and mini_icons and mini_icons.get_icon then
+                      local mini_icon, mini_hl = mini_icons.get_icon(ctx.item.data.type, ctx.label)
+                      if mini_icon then
+                        return mini_hl
+                      end
+                    end
+                  end
+                  return ctx.kind_hl
                 end,
               },
               kind = {
-                -- (optional) use highlights from mini.icons
+                -- Optional, use highlights from mini.icons
                 highlight = function(ctx)
-                  local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
-                  return hl
+                  if vim.tbl_contains({ "Path" }, ctx.source_name) then
+                    local ok, mini_icons = pcall(require, "mini.icons")
+                    if ok and mini_icons and mini_icons.get_icon then
+                      local mini_icon, mini_hl = mini_icons.get_icon(ctx.item.data.type, ctx.label)
+                      if mini_icon then
+                        return mini_hl
+                      end
+                    end
+                  end
+                  return ctx.kind_hl
                 end,
               },
             },
