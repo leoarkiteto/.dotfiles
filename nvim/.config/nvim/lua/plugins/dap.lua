@@ -4,6 +4,7 @@ return {
     "rcarriga/nvim-dap-ui",
     "nvim-neotest/nvim-nio",
     "Cliffback/netcoredbg-macOS-arm64.nvim",
+    "akinsho/flutter-tools.nvim",
   },
   config = function()
     local dap = require("dap")
@@ -57,6 +58,25 @@ return {
 
     -- Define highlight group for stopped line
     vim.api.nvim_set_hl(0, "DapStoppedLine", { bg = "#555530" })
+
+    -- Configure Dart/Flutter debugger
+    -- Try Mason first, fallback to system dart
+    local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
+    local dart_debug_adapter = mason_bin .. "/dart-debug-adapter"
+
+    if vim.fn.executable(dart_debug_adapter) == 1 then
+      dap.adapters.dart = {
+        type = "executable",
+        command = dart_debug_adapter,
+        args = {},
+      }
+    else
+      dap.adapters.dart = {
+        type = "executable",
+        command = "dart",
+        args = { "dart-debug-adapter" },
+      }
+    end
 
     -- Configure .NET Core debugger
     dap.adapters.coreclr = {

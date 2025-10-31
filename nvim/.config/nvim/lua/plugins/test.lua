@@ -122,7 +122,7 @@ end
 ---@param file string File path
 ---@return string Vitest command
 local function build_vitest_command(file)
-  local default_vitest_args = { "run", "--no-watch" }
+  local default_vitest_args = { "run" }
   local pkg_manager = get_package_manager()
   local args = table.concat(default_vitest_args, " ")
 
@@ -443,12 +443,10 @@ end
 
 return {
   "nvim-neotest/neotest",
-  commit = "52fca6717ef972113ddd6ca223e30ad0abb2800c",
   lazy = true,
   dependencies = {
     "nvim-neotest/neotest-jest",
     "marilari88/neotest-vitest",
-    "Issafalcon/neotest-dotnet",
   },
   -- LazyVim: Define commands for lazy loading
   cmd = { "Neotest" },
@@ -483,19 +481,6 @@ return {
         vitestConfigFile = get_vitest_config,
         env = { CI = true },
         cwd = get_project_root,
-      })
-    )
-
-    -- .NET adapter configuration
-    table.insert(
-      opts.adapters,
-      require("neotest-dotnet")({
-        dap = {
-          args = { justMyCode = false },
-          adapter_name = "netcoredbg",
-        },
-        dotnet_additional_args = { "--verbosity", "detailed" },
-        discovery_root = "solution",
       })
     )
 

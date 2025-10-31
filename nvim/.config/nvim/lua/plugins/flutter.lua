@@ -39,11 +39,26 @@ return {
         -- if empty app will not stop on any exceptions, otherwise it will stop on those specified
         -- see |:help dap.set_exception_breakpoints()| for more info
         exception_breakpoints = {},
-        -- register_configurations = function(paths)
-        --   require("dap").configuration.dart = {
-        --     <put here config that you would find in .vscode/launch.json>
-        --   }
-        -- end,
+        register_configurations = function(paths)
+          local dap = require("dap")
+          local flutter_project_root = vim.fn.getcwd()
+
+          dap.configurations.dart = {
+            {
+              type = "dart",
+              request = "launch",
+              name = "Launch Flutter",
+              program = flutter_project_root .. "/lib/main.dart",
+              cwd = flutter_project_root,
+            },
+            {
+              type = "dart",
+              request = "attach",
+              name = "Attach to Flutter",
+              deviceId = "flutter-tester",
+            },
+          }
+        end,
       },
       fvm = false, -- takes longer to start up so you can disable it if you don't use fvm
       widget_guides = {
@@ -82,12 +97,12 @@ return {
           completeFunctionCalls = true,
           analysisExcludedFolders = {},
           renameFilesWithClasses = "prompt", -- "always"
-          enableSnippets = false, -- Disable snippets to prevent RangeError issues
+          enableSnippets = true, -- Enable snippets from Dart Analysis Server
           updateImportsOnRename = true, -- Whether to update imports and other directives when files are renamed. Required for `Flutter: Rename to snake_case`
           lineLength = 120,
           -- Add robust settings to prevent crashes
           onlyAnalyzeProjectsWithOpenFiles = true,
-          enableSeverSnippets = false,
+          enableSeverSnippets = true, -- Enable server snippets
           analysisServerTimeout = 30,
         },
         -- Add error handling for Flutter tools LSP

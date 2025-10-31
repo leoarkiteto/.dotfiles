@@ -30,6 +30,7 @@ local function filter_available_formatters(formatters, context)
     shfmt = "shfmt",
     black = "black",
     injected = true,
+    gdformat = "gdformat",
   }
 
   for _, formatter in ipairs(formatters) do
@@ -215,6 +216,12 @@ if is_available("shfmt") then
   formatters_by_ft.bash = { "shfmt" }
 end
 
+-- GDScript (use gdformat if available)
+if is_available("gdformat") then
+  formatters_by_ft.gdscript = { "gdformat" }
+  formatters_by_ft.gd = { "gdformat" }
+end
+
 -- Dart/Flutter files (use dart format)
 if is_available("dart") then
   formatters_by_ft.dart = { "dart_format" }
@@ -240,6 +247,16 @@ if is_available("black") then
     command = "black",
     args = { "--stdin-filename", "$FILENAME", "-" },
     stdin = true,
+  }
+end
+
+-- GDScript formatter (gdtoolkit-format)
+-- Note: gdformat doesn't support stdin, so we use file-based formatting
+if is_available("gdformat") then
+  formatters.gdformat = {
+    command = "gdformat",
+    args = { "$FILENAME" },
+    stdin = false,
   }
 end
 

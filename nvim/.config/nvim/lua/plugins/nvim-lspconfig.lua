@@ -24,7 +24,7 @@ return {
           },
         },
         -- Completetly disable inlay hints for all servers
-        inlayHint = nil,
+        -- inlayHint = nil,
       },
     },
     servers = {
@@ -334,9 +334,111 @@ return {
         },
       },
       gdscript = {
-        cmd = { "ncat", "localhost", "6005" },
-        filetypes = { "gdscript" },
+        -- Connect to Godot's Language Server via TCP
+        -- Prefer socat (better for persistent LSP connections), fallback to nc/netcat
+        -- Port 6005 is the default, but can be changed in Godot's Editor Settings
+        cmd = (function()
+          -- Try socat first (best for LSP persistent connections)
+          if vim.fn.executable("socat") == 1 then
+            return { "socat", "-", "TCP:127.0.0.1:6005" }
+          end
+          -- Fallback to nc (BSD netcat on macOS)
+          if vim.fn.executable("nc") == 1 then
+            return { "nc", "127.0.0.1", "6005" }
+          end
+          -- Last resort: netcat (GNU netcat)
+          if vim.fn.executable("netcat") == 1 then
+            return { "netcat", "127.0.0.1", "6005" }
+          end
+          -- No connection tool found
+          vim.notify(
+            "[GDScript LSP] Error: No connetion tool found (socat, nc, or netcat). "
+              .. "Please install socat for best results: brew install socat",
+            vim.log.levels.ERROR
+          )
+          return { "echo", "Error: No LSP connection tool available" }
+        end)(),
+        filetypes = { "gd", "gdscript", "gdscript3" },
+        root_dir = function(fname)
+          return require("lspconfig.util").root_pattern("project.godot")(fname) or vim.fn.getcwd()
+        end,
+        -- GDScript LSP settings
+        settings = {},
+        -- Single file support for standalone .gd files
+        single_file_support = true,
+        -- Enhanced on_attach with logging and diagnostics
+        on_attach = function(client, bufnr)
+          -- Use LazyVim's default on_attach
+          require("lazyvim.util").lsp.on_attach(client, bufnr)
+
+          -- Log server capabilities for debugging
+          local capabilities = client.server_capabilities
+          local has_code_actions = capabilities.codeActionProvider ~= nil and capabilities.codeActionProvider ~= false
+
+          if has_code_actions then
+            vim.notify(
+              "[GDScript LSP] ✅ Connected! Code actions available: <leader>ca",
+              vim.log.levels.INFO,
+              { title = "GDScript LSP" }
+            )
+          else
+            vim.notify(
+              "[GDScript LSP] ✅ Connected! (Code actions not supported by server)",
+              vim.log.levels.INFO,
+              { title = "GDScript LSP" }
+            )
+          end
+        end,
+        -- Add error handler
+        on_exit = function(code, signal)
+          if code ~= 0 and signal ~= 15 then
+            vim.notify(
+              string.format("[GDScript LSP] Server exited (code: %d, signal: %d)", code, signal),
+              vim.log.levels.WARN,
+              { title = "GDScript LSP" }
+            )
+          end
+        end,
+        -- Godot's LSP runs via TCP, so we use netcat to connect
+        -- IMPORTANT: Make sure Godot's Language Server is enabled in:
+        -- Editor > Editor Settings > Network > Language Server > Enable Language Server
+        -- Also ensure the Remote Port matches (default: 6005)
+        -- And Remote Host is set to 127.0.0.1 or localhost
+        -- The LSP will only work when Godot is running!
       },
     },
   },
+  config = function(_, opts)
+    -- Auto-start gdscript LSP when opening .gd files
+    local augroup = vim.api.nvim_create_augroup("gdscript-lsp-autostart", { clear = true })
+
+    vim.api.nvim_create_autocmd({ "BufEnter", "FileType" }, {
+      group = augroup,
+      pattern = { "*.gd", "*.gdscript" },
+      callback = function()
+        -- Check if this is a GDScript file
+        local ft = vim.bo.filetype
+        if ft ~= "gdscript" and ft ~= "gd" then
+          return
+        end
+
+        -- Check if LSP is already attached
+        local clients = vim.lsp.get_active_clients({ name = "gdscript", bufnr = 0 })
+        if #clients == 0 then
+          -- Start the LSP
+          vim.defer_fn(function()
+            local ok, _ = pcall(vim.cmd, "LspStart gdscript")
+            if not ok then
+              -- Fallback: try using lspconfig API directly
+              local lspconfig = require("lspconfig")
+              if lspconfig.gdscript then
+                lspconfig.gdscript.launch()
+              end
+            end
+          end, 200)
+        end
+      end,
+      desc = "Auto-start GDScript LSP",
+    })
+  end,
 }

@@ -43,6 +43,9 @@ return {
       "lua", -- For Neovim config
       "vim", -- For Neovim config
       "query", -- For custom Treesitter queries
+
+      -- Game Development
+      "gdscript", -- Godot scripting language
     },
     highlight = {
       enable = true,

@@ -48,5 +48,23 @@ return {
         luasnip.change_choice(1)
       end
     end, { silent = true })
+
+    -- Command to list all available snippets from current filetype
+    vim.api.nvim_create_user_command("ListSnippets", function()
+      local ft = vim.bo.filetype or "all"
+      local snippets = luasnip.get_snippets(ft)
+
+      if not snippets or #snippets == 0 then
+        print("No snippets available for filetype: " .. ft)
+        return
+      end
+
+      print(string.format("Available snippets for '%s':\n", ft))
+      for _, snippet in ipairs(snippets) do
+        local trigger = snippet.trigger or snippet.dTrig or "<unknown>"
+        local desc = snippet.dscr or snippet.description or ""
+        print(string.format("  %-20s %s", trigger, desc))
+      end
+    end, { desc = "List all available snippets for current filetype" })
   end,
 }
