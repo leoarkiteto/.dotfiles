@@ -173,15 +173,5 @@ return {
         end
       end,
     })
-
-    -- Manual lint command for C# (since auto-lint can be slow)
-    vim.api.nvim_create_autocmd("FileType", {
-      pattern = "cs",
-      callback = function()
-        vim.keymap.set("n", "<leader>cl", function()
-          lint.try_lint()
-        end, { buffer = true, desc = "Lint C# File" })
-      end,
-    })
   end,
 }
