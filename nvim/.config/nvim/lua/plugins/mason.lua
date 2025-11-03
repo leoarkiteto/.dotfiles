@@ -3,8 +3,8 @@ return {
   opts = {
     ensure_installed = {
       -- .NET Development Stack
-      "omnisharp", -- C# LSP server (fallback)
-      -- Note: csharp-ls (Roslyn-based alternative) must be installed via: dotnet tool install --global csharp-ls
+      -- Note: Using easy-dotnet.nvim with chsarp-ls (Roslyn-based) instead of omnisharp
+      -- chsarp-ls must be installed via: dotnet tool install --global chsarp-ls
       "netcoredbg", -- .NET debugger
       "csharpier", -- C# formatter
 
@@ -57,7 +57,7 @@ return {
     local registry = require("mason-registry")
 
     -- Auto-install critical .NET and web tools if missing
-    local critical_tools = { "omnisharp", "netcoredbg", "csharpier", "prettierd", "eslint_d", "dart-debug-adapter" }
+    local critical_tools = { "netcoredbg", "csharpier", "prettierd", "eslint_d", "dart-debug-adapter" }
 
     for _, tool in ipairs(critical_tools) do
       local package = registry.get_package(tool)

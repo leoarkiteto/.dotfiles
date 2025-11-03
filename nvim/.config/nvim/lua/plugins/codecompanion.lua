@@ -55,6 +55,37 @@ return {
         roles = {
           user = "Leo Franca",
         },
+        slash_commands = {
+          ["buffer"] = {
+            keymaps = {
+              modes = {
+                i = "<C-b>",
+              },
+            },
+          },
+          ["fetch"] = {
+            keymaps = {
+              modes = {
+                i = "<C-f>",
+              },
+            },
+          },
+          ["help"] = {
+            opts = {
+              max_lines = 1000,
+            },
+          },
+          ["image"] = {
+            keymaps = {
+              modes = {
+                i = "<C-i>",
+              },
+            },
+            opts = {
+              dirs = { "~/Documents/Screenshots" },
+            },
+          },
+        },
       },
       keymaps = {
         send = {
@@ -65,37 +96,6 @@ return {
         completion = {
           modes = {
             i = { "<C-x>" },
-          },
-        },
-      },
-      slash_commands = {
-        ["buffer"] = {
-          keymaps = {
-            modes = {
-              i = "<C-b>",
-            },
-          },
-        },
-        ["fetch"] = {
-          keymaps = {
-            modes = {
-              i = "<C-f>",
-            },
-          },
-        },
-        ["help"] = {
-          opts = {
-            max_lines = 1000,
-          },
-        },
-        ["image"] = {
-          keymaps = {
-            modes = {
-              i = "<C-i>",
-            },
-          },
-          opts = {
-            dirs = { "~/Documents/Screenshots" },
           },
         },
       },
