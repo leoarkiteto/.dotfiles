@@ -4,5 +4,21 @@ return {
   dependencies = {
     "nvim-lua/plenary.nvim",
   },
-  config = true,
+  opts = {
+    widget_guides = {
+      enabled = true,
+    },
+    lsp = {
+      color = {
+        enabled = true,
+      },
+    },
+    outline = {
+      open_cmd = "30vnew",
+      auto_open = true,
+    },
+    closing_tags = {
+      prefix = ">",
+    },
+  },
 }

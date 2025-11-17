@@ -5,9 +5,12 @@ return {
       theme = "auto",
     },
     sections = {
-      lualine_a = { "mode", require("easy-dotnet.ui-modules.jobs").lualine },
+      lualine_a = {
+        { "mode", separator = { right = "" }, right_padding = 2 },
+        require("easy-dotnet.ui-modules.jobs").lualine,
+      },
       lualine_b = {
-        "branch",
+        { "branch", separator = { right = "" }, right_padding = 2 },
         {
           "diff",
           source = function()
@@ -20,7 +23,7 @@ return {
               }
           end,
         },
-        "diagnostics",
+        { "diagnostics", separator = { right = "" }, right_padding = 2 },
       },
       lualine_c = {
         {
@@ -81,8 +84,8 @@ return {
         "fileformat",
         "filetype",
       },
-      lualine_y = { "progress" },
-      lualine_z = { "location" },
+      lualine_y = { { "progress", separator = { left = "" }, left_padding = 2 } },
+      lualine_z = { { "location", separator = { left = "" }, left_padding = 2 } },
     },
     inactive_sections = {
       lualine_a = {},
