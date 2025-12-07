@@ -22,10 +22,21 @@ return {
     -- Load snippets from friendly-snippets
     require("luasnip.loaders.from_vscode").lazy_load()
 
-    -- Load custom snippets from snippets directory (if you create any)
-    require("luasnip.loaders.from_vscode").lazy_load({
-      paths = { vim.fn.stdpath("config") .. "/snippets" },
+    -- Load custom snippets from dotfiles directory
+    local snippets_path = "/Users/leofranca/.dotfiles/nvim/.config/nvim/snippets"
+    require("luasnip.loaders.from_vscode").load({
+      paths = { snippets_path },
     })
+    
+    -- Debug: Check if snippets loaded
+    vim.defer_fn(function()
+      local snippets = luasnip.get_snippets("gdscript")
+      if snippets and #snippets > 0 then
+        vim.notify(string.format("✅ Loaded %d GDScript snippets from %s", #snippets, snippets_path), vim.log.levels.INFO)
+      else
+        vim.notify("⚠️  No GDScript snippets loaded from " .. snippets_path, vim.log.levels.WARN)
+      end
+    end, 1000)
 
     -- Load SnipMate-style snippets (optional)
     require("luasnip.loaders.from_snipmate").lazy_load()
@@ -66,5 +77,14 @@ return {
         print(string.format("  %-20s %s", trigger, desc))
       end
     end, { desc = "List all available snippets for current filetype" })
+    
+    -- Command to reload snippets
+    vim.api.nvim_create_user_command("ReloadSnippets", function()
+      local snippets_path = "/Users/leofranca/.dotfiles/nvim/.config/nvim/snippets"
+      require("luasnip.loaders.from_vscode").load({
+        paths = { snippets_path },
+      })
+      vim.notify("✅ Snippets reloaded from " .. snippets_path, vim.log.levels.INFO)
+    end, { desc = "Reload custom snippets" })
   end,
 }

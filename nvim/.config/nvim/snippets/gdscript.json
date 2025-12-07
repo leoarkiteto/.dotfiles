@@ -1,0 +1,282 @@
+{
+  "Ready Function": {
+    "prefix": "gdready",
+    "body": [
+      "func _ready() -> void:",
+      "\t$0"
+    ],
+    "description": "Called when the node is ready"
+  },
+  "Process Function": {
+    "prefix": "gdprocess",
+    "body": [
+      "func _process(delta: float) -> void:",
+      "\t$0"
+    ],
+    "description": "Called every frame"
+  },
+  "Physics Process Function": {
+    "prefix": "gdphysics",
+    "body": [
+      "func _physics_process(delta: float) -> void:",
+      "\t$0"
+    ],
+    "description": "Called every physics frame"
+  },
+  "Input Function": {
+    "prefix": "gdinput",
+    "body": [
+      "func _input(event: InputEvent) -> void:",
+      "\t$0"
+    ],
+    "description": "Called on input events"
+  },
+  "Unhandled Input Function": {
+    "prefix": "gduninput",
+    "body": [
+      "func _unhandled_input(event: InputEvent) -> void:",
+      "\t$0"
+    ],
+    "description": "Called on unhandled input events"
+  },
+  "Draw Function": {
+    "prefix": "gddraw",
+    "body": [
+      "func _draw() -> void:",
+      "\t$0"
+    ],
+    "description": "Called when the node needs to be redrawn"
+  },
+  "Enter Tree Function": {
+    "prefix": "gdentertree",
+    "body": [
+      "func _enter_tree() -> void:",
+      "\t$0"
+    ],
+    "description": "Called when entering the scene tree"
+  },
+  "Exit Tree Function": {
+    "prefix": "gdexittree",
+    "body": [
+      "func _exit_tree() -> void:",
+      "\t$0"
+    ],
+    "description": "Called when exiting the scene tree"
+  },
+  "Generic Function": {
+    "prefix": "gdfunc",
+    "body": [
+      "func ${1:function_name}(${2:args}) -> ${3:void}:",
+      "\t$0"
+    ],
+    "description": "Create a function"
+  },
+  "Class Name": {
+    "prefix": "gdclass",
+    "body": [
+      "class_name ${1:ClassName}"
+    ],
+    "description": "Define a class name"
+  },
+  "Extends": {
+    "prefix": "gdextends",
+    "body": [
+      "extends ${1:Node}"
+    ],
+    "description": "Extend a class"
+  },
+  "Export Variable": {
+    "prefix": "gdexport",
+    "body": [
+      "@export var ${1:variable_name}: ${2:Type} = ${3:default_value}"
+    ],
+    "description": "Export a variable to the inspector"
+  },
+  "Export Range": {
+    "prefix": "gdexportrange",
+    "body": [
+      "@export_range(${1:min}, ${2:max}) var ${3:variable_name}: ${4:float} = ${5:default_value}"
+    ],
+    "description": "Export a variable with range to the inspector"
+  },
+  "Export Enum": {
+    "prefix": "gdexportenum",
+    "body": [
+      "@export_enum(\"${1:Option1}\", \"${2:Option2}\") var ${3:variable_name}: String = \"${1:Option1}\""
+    ],
+    "description": "Export an enum variable"
+  },
+  "OnReady Variable": {
+    "prefix": "gdonready",
+    "body": [
+      "@onready var ${1:variable_name}: ${2:Type} = $${3:NodePath}"
+    ],
+    "description": "OnReady variable"
+  },
+  "Signal": {
+    "prefix": "gdsignal",
+    "body": [
+      "signal ${1:signal_name}(${2:args})"
+    ],
+    "description": "Define a signal"
+  },
+  "Emit Signal": {
+    "prefix": "gdemit",
+    "body": [
+      "${1:signal_name}.emit(${2:args})"
+    ],
+    "description": "Emit a signal"
+  },
+  "Connect Signal": {
+    "prefix": "gdconnect",
+    "body": [
+      "${1:signal_name}.connect(${2:callable})"
+    ],
+    "description": "Connect a signal"
+  },
+  "If Statement": {
+    "prefix": "gdif",
+    "body": [
+      "if ${1:condition}:",
+      "\t$0"
+    ],
+    "description": "If statement"
+  },
+  "If Else Statement": {
+    "prefix": "gdifelse",
+    "body": [
+      "if ${1:condition}:",
+      "\t${2:pass}",
+      "else:",
+      "\t$0"
+    ],
+    "description": "If-else statement"
+  },
+  "For Loop": {
+    "prefix": "gdfor",
+    "body": [
+      "for ${1:item} in ${2:collection}:",
+      "\t$0"
+    ],
+    "description": "For loop"
+  },
+  "For Range Loop": {
+    "prefix": "gdforrange",
+    "body": [
+      "for ${1:i} in range(${2:n}):",
+      "\t$0"
+    ],
+    "description": "For range loop"
+  },
+  "While Loop": {
+    "prefix": "gdwhile",
+    "body": [
+      "while ${1:condition}:",
+      "\t$0"
+    ],
+    "description": "While loop"
+  },
+  "Match Statement": {
+    "prefix": "gdmatch",
+    "body": [
+      "match ${1:variable}:",
+      "\t${2:pattern}:",
+      "\t\t${3:pass}",
+      "\t_:",
+      "\t\t$0"
+    ],
+    "description": "Match statement (switch case)"
+  },
+  "Print Debug": {
+    "prefix": "gdprint",
+    "body": [
+      "print(${1:\"${2:message}\"})"
+    ],
+    "description": "Print to console"
+  },
+  "Assert": {
+    "prefix": "gdassert",
+    "body": [
+      "assert(${1:condition}, \"${2:message}\")"
+    ],
+    "description": "Assert statement"
+  },
+  "Get Node": {
+    "prefix": "gdgetnode",
+    "body": [
+      "get_node(\"${1:NodePath}\")"
+    ],
+    "description": "Get node by path"
+  },
+  "Get Node Dollar": {
+    "prefix": "gdnode",
+    "body": [
+      "$${1:NodePath}"
+    ],
+    "description": "Get node with $ shorthand"
+  },
+  "Await Signal": {
+    "prefix": "gdawait",
+    "body": [
+      "await ${1:signal_name}"
+    ],
+    "description": "Await a signal"
+  },
+  "Tween": {
+    "prefix": "gdtween",
+    "body": [
+      "var tween = create_tween()",
+      "tween.tween_property(${1:object}, \"${2:property}\", ${3:final_value}, ${4:duration})",
+      "$0"
+    ],
+    "description": "Create a tween animation"
+  },
+  "Ready and PhysicsProcess": {
+    "prefix": "gdreadyphysics",
+    "body": [
+      "func _ready() -> void:",
+      "\t${1:pass}",
+      "",
+      "",
+      "func _physics_process(delta: float) -> void:",
+      "\t$0"
+    ],
+    "description": "Ready and Physics Process functions"
+  },
+  "Ready and Process": {
+    "prefix": "gdreadyprocess",
+    "body": [
+      "func _ready() -> void:",
+      "\t${1:pass}",
+      "",
+      "",
+      "func _process(delta: float) -> void:",
+      "\t$0"
+    ],
+    "description": "Ready and Process functions"
+  },
+  "Var with Type": {
+    "prefix": "gdvar",
+    "body": [
+      "var ${1:variable_name}: ${2:Type} = ${3:value}"
+    ],
+    "description": "Variable with type annotation"
+  },
+  "Const": {
+    "prefix": "gdconst",
+    "body": [
+      "const ${1:CONSTANT_NAME} = ${2:value}"
+    ],
+    "description": "Constant"
+  },
+  "Enum": {
+    "prefix": "gdenum",
+    "body": [
+      "enum ${1:EnumName} {",
+      "\t${2:VALUE1},",
+      "\t${3:VALUE2},",
+      "}"
+    ],
+    "description": "Enum definition"
+  }
+}

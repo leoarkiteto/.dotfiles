@@ -48,7 +48,7 @@ return {
           vim.bo.autoindent = true
           vim.bo.smartindent = true
 
-          -- Set text width (optional, GDScript doesn't have strict line lenght)
+          -- Set text width (optional, GDScript doesn't have strict line lenghtj)
           vim.bo.textwidth = 80
         end,
         desc = "Configure GDScript file settings",
