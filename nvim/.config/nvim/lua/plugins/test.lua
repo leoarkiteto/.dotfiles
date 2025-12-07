@@ -499,7 +499,7 @@ return {
         })
       )
     else
-      vim.notify("neotest-vstest not available. Install with :lazy sync", vim.log.levels.WARN)
+      vim.notify("neotest-vstest not available. Install with :Lazy sync", vim.log.levels.WARN)
     end
 
     -- Setup coverage commad with scheduled execution to avoid fast events

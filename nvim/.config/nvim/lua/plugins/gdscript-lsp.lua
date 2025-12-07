@@ -42,7 +42,7 @@ return {
       vim.api.nvim_create_user_command("GodotLSP", start_gdscript_lsp, { desc = "Connect to Godot LSP server" })
 
       -- Auto-start GDScript LSP when opening .gd files
-      vim.api.nvim_create_augroup("FileType", {
+      vim.api.nvim_create_autocmd("FileType", {
         pattern = "gdscript",
         callback = start_gdscript_lsp,
         desc = "Auto-start GDScript LSP for Godot files",
