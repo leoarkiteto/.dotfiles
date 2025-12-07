@@ -22,8 +22,8 @@ return {
     -- Load snippets from friendly-snippets
     require("luasnip.loaders.from_vscode").lazy_load()
 
-    -- Load custom snippets from snippets directory (works with GNU Stow)
-    local snippets_path = vim.fn.stdpath("config") .. "/snippets"
+    -- Load custom snippets from lua/snippets directory (works with GNU Stow)
+    local snippets_path = vim.fn.stdpath("config") .. "/lua/snippets"
     require("luasnip.loaders.from_vscode").load({
       paths = { snippets_path },
     })
@@ -80,7 +80,7 @@ return {
     
     -- Command to reload snippets
     vim.api.nvim_create_user_command("ReloadSnippets", function()
-      local snippets_path = vim.fn.stdpath("config") .. "/snippets"
+      local snippets_path = vim.fn.stdpath("config") .. "/lua/snippets"
       require("luasnip.loaders.from_vscode").load({
         paths = { snippets_path },
       })
