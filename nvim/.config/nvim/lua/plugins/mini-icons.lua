@@ -70,6 +70,10 @@ return {
         glyph = "󰡨",
         hl = "MiniIconsBlue",
       },
+      ["docker-compose.override.yml"] = {
+        glyph = "󰡨",
+        hl = "MiniIconsGrey",
+      },
       ["docker-compose.yaml"] = {
         glyph = "󰡨",
         hl = "MiniIconsBlue",

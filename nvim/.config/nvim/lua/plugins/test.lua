@@ -447,6 +447,7 @@ return {
   dependencies = {
     "nvim-neotest/neotest-jest",
     "marilari88/neotest-vitest",
+    "Nsidorenco/neotest-vstest",
   },
   -- LazyVim: Define commands for lazy loading
   cmd = { "Neotest" },
@@ -483,6 +484,23 @@ return {
         cwd = get_project_root,
       })
     )
+
+    -- .NET adapter configuration (vstest)
+    -- Note: If you encounter errors, make sure neotest-vstest is up to date
+    local vstest_status, vstest = pcall(require, "neotest-vstest")
+    if vstest_status then
+      table.insert(
+        opts.adapters,
+        vstest({
+          -- Optional: Filter directories/files for test discovery
+          filter_dir = function(name, rel_path, root)
+            return name ~= "node_modules" and name ~= "bin" and name ~= "obj"
+          end,
+        })
+      )
+    else
+      vim.notify("neotest-vstest not available. Install with :lazy sync", vim.log.levels.WARN)
+    end
 
     -- Setup coverage commad with scheduled execution to avoid fast events
     vim.schedule(function()

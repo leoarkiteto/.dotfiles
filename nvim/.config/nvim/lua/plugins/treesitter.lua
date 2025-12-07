@@ -46,6 +46,8 @@ return {
 
       -- Game Development
       "gdscript", -- Godot scripting language
+      "godot_resource",
+      "gdshader",
     },
     highlight = {
       enable = true,

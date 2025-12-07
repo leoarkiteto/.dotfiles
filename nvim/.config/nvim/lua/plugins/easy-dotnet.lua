@@ -36,6 +36,9 @@ return {
       },
       csproj_mappings = true,
       picker = "snacks",
+      debugger = {
+        bin_path = vim.fn.expand("~/.local/share/nvim/lazy/netcoredbg-macOS-arm64.nvim/netcoredbg/netcoredbg"),
+      },
     })
 
     -- Fix for easy-dotnet.nvim bug where proc source options are incorrectly constructed

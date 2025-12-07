@@ -2,7 +2,16 @@ return {
   -- vim-godot plugin for Godot integration
   {
     "habamax/vim-godot",
+    event = "VeryLazy",
     ft = { "gdscript", "gd" },
+    init = function()
+      -- Detect .gd files as gdscript filetype
+      vim.filetype.add({
+        extension = {
+          gd = "gdscript",
+        },
+      })
+    end,
     config = function()
       -- Configure Godot executable path
       -- Default to 'godot' in PATH, but can be customized
