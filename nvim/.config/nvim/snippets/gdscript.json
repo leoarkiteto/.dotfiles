@@ -20,7 +20,7 @@
     "body": [
       "func _physics_process(delta: float) -> void:",
       "\t$0"
-    ],
+    ]ea
     "description": "Called every physics frame"
   },
   "Input Function": {
