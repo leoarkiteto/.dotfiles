@@ -27,7 +27,7 @@ return {
     require("luasnip.loaders.from_vscode").load({
       paths = { snippets_path },
     })
-    
+
     -- Debug: Check if snippets loaded
     vim.defer_fn(function()
       local snippets = luasnip.get_snippets("gdscript")
@@ -77,12 +77,12 @@ return {
         print(string.format("  %-20s %s", trigger, desc))
       end
     end, { desc = "List all available snippets for current filetype" })
-    
+
     -- Command to reload snippets
     vim.api.nvim_create_user_command("ReloadSnippets", function()
-      local snippets_path = vim.fn.stdpath("config") .. "/lua/snippets"
+      local snippets_paths = vim.fn.stdpath("config") .. "/lua/snippets"
       require("luasnip.loaders.from_vscode").load({
-        paths = { snippets_path },
+        paths = { snippets_paths },
       })
       vim.notify("✅ Snippets reloaded!", vim.log.levels.INFO)
     end, { desc = "Reload custom snippets" })

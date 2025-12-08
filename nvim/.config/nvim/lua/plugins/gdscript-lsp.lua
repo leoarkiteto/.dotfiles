@@ -1,9 +1,28 @@
+-- GDScript LSP configuration for Godot Engine
+-- This configuration does NOT use nvim-lspconfig's config function
+-- to avoid interfering with LazyVim's default LSP keymaps
+
 return {
-  -- GDScript LSP configuration for Godot Engine
-  -- Connects to Godot's built-in LSP server on port 6005
   {
-    "neovim/nvim-lspconfig",
-    config = function()
+    "nvim-lspconfig",
+    opts = function(_, opts)
+      -- Add godot LSP server configuration
+      opts.servers = opts.servers or {}
+      opts.servers.gdscript = {
+        -- Use manual setup via autocmd instead
+        manual_setup = true,
+      }
+      return opts
+    end,
+  },
+  {
+    "nvim-lua/plenary.nvim",
+    lazy = true,
+  },
+  -- Setup GDScript LSP connection without interfering with lspconfig
+  {
+    "LazyVim/LazyVim",
+    opts = function()
       -- Function to start GDScript LSP
       local function start_gdscript_lsp()
         local bufnr = vim.api.nvim_get_current_buf()
@@ -34,6 +53,7 @@ return {
           root_dir = root_dir,
           on_attach = function(client, buf)
             vim.notify("✅ GDScript LSP connected to Godot Editor", vim.log.levels.INFO)
+            -- LazyVim's LSP keymaps are automatically applied via LspAttach event
           end,
         })
       end
