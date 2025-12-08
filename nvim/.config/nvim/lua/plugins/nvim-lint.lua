@@ -84,8 +84,44 @@ return {
       -- Markdown
       markdown = { "markdownlint-cli2" },
       yaml = { "yamllint" },
+      gdscript = { "gdlint" },
     },
     linters = {
+      gdlint = {
+        cmd = "gdlint",
+        stdin = false,
+        ignore_exitcode = true,
+        args = { function() return vim.fn.expand("%:p") end },
+        stream = "stdout",
+        parser = function(output, bufnr)
+          local diagnostics = {}
+          
+          -- GDLint output format: file:line:column: severity: message
+          -- Example: script.gd:10:5: Error: Unused variable 'player'
+          for line in output:gmatch("[^\r\n]+") do
+            local file, line_num, col, severity, message = line:match("([^:]+):(%d+):(%d+):%s*(%w+):%s*(.+)")
+            
+            if line_num and message then
+              local diagnostic_severity = vim.diagnostic.severity.INFO
+              if severity and severity:lower() == "error" then
+                diagnostic_severity = vim.diagnostic.severity.ERROR
+              elseif severity and severity:lower() == "warning" then
+                diagnostic_severity = vim.diagnostic.severity.WARN
+              end
+              
+              table.insert(diagnostics, {
+                lnum = tonumber(line_num) - 1,
+                col = tonumber(col or 0) - 1,
+                severity = diagnostic_severity,
+                message = message,
+                source = "gdlint",
+              })
+            end
+          end
+          
+          return diagnostics
+        end,
+      },
       -- Custom dotnet format linter for C#
       dotnet_format = {
         name = "dotnet_format",
