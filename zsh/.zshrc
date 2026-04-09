@@ -143,3 +143,10 @@ esac
 # pnpm end
 
 eval "$(starship init zsh)"
+
+. "$HOME/.local/bin/env"
+
+# Added by Antigravity
+export PATH="/Users/leofranca/.antigravity/antigravity/bin:$PATH"
+export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
+export JAVA_HOME=$(/usr/libexec/java_home -v 17)

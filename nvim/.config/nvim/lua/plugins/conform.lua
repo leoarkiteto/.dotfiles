@@ -131,7 +131,7 @@ end
 if is_available("sqlfluff") then
   formatters.sqlfluff = {
     command = "sqlfluff",
-    args = { "--format", "--dialect=postgres", "-" },
+    args = { "format", "--dialect=postgres", "-" },
     stdin = true,
     -- Make cwd optional - fallback to current directory if no config found
     cwd = function(self, ctx)
