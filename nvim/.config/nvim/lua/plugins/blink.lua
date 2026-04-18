@@ -19,18 +19,11 @@ return {
           "path",
           "buffer",
           "dadbod",
-          "easy-dotnet",
         },
         providers = {
           dadbod = {
             name = "Dadbod",
             module = "vim_dadbod_completion.blink",
-          },
-          ["easy-dotnet"] = {
-            name = "easy-dotnet",
-            module = "easy-dotnet.completion.blink",
-            score_offset = 10000,
-            async = true,
           },
         },
       },
