@@ -53,7 +53,7 @@ end
 ---@param file_path string
 ---@return table
 local function get_web_linters(file_path)
-  -- Try eslint_d first, fallback to biome for projedts without eslint config
+  -- Try eslint_d first, fallback to biome for projects without eslint config
   if has_eslint_config(file_path) then
     return { "eslint_d" }
   else
@@ -66,8 +66,8 @@ return {
   "mfussenegger/nvim-lint",
   opts = {
     linters_by_ft = {
-      -- .NET/C# linting
-      cs = { "dotnet_format" }, -- Use dotnet format for C# linting
+      -- Go development
+      go = { "golangcilint" },
 
       -- Web technologies (prefer eslint_d, fallback to Biome for non-eslint projects)
       typescript = { "eslint_d" },
@@ -91,16 +91,20 @@ return {
         cmd = "gdlint",
         stdin = false,
         ignore_exitcode = true,
-        args = { function() return vim.fn.expand("%:p") end },
+        args = {
+          function()
+            return vim.fn.expand("%:p")
+          end,
+        },
         stream = "stdout",
         parser = function(output, bufnr)
           local diagnostics = {}
-          
+
           -- GDLint output format: file:line:column: severity: message
           -- Example: script.gd:10:5: Error: Unused variable 'player'
           for line in output:gmatch("[^\r\n]+") do
             local file, line_num, col, severity, message = line:match("([^:]+):(%d+):(%d+):%s*(%w+):%s*(.+)")
-            
+
             if line_num and message then
               local diagnostic_severity = vim.diagnostic.severity.INFO
               if severity and severity:lower() == "error" then
@@ -108,57 +112,13 @@ return {
               elseif severity and severity:lower() == "warning" then
                 diagnostic_severity = vim.diagnostic.severity.WARN
               end
-              
+
               table.insert(diagnostics, {
                 lnum = tonumber(line_num) - 1,
                 col = tonumber(col or 0) - 1,
                 severity = diagnostic_severity,
                 message = message,
                 source = "gdlint",
-              })
-            end
-          end
-          
-          return diagnostics
-        end,
-      },
-      -- Custom dotnet format linter for C#
-      dotnet_format = {
-        name = "dotnet_format",
-        cmd = "dotnet",
-        stdin = false,
-        args = {
-          "format",
-          "--verify-no-changes",
-          "--verbosity",
-          "diagnostic",
-          function()
-            return vim.fn.expand("%:p")
-          end,
-        },
-        ignore_exitcode = true,
-        parser = function(output)
-          local diagnostics = {}
-
-          -- Paerse dotnet format output for style vialations
-          for line in output:gmatch("[^\r\n]+") do
-            local file, line_num, col, severity, code, message =
-              line:match("([^%(]+)%((%d+),(%d+)%)%: (%w+) (%w+): (.+)")
-
-            if file and line_num and col and message then
-              local diagnostic_severity = vim.diagnostic.severity.INFO
-              if severity == "error" then
-                diagnostic_severity = vim.diagnostic.severity.ERROR
-              elseif severity == "warning" then
-                diagnostic_severity = vim.diagnostic.severity.WARN
-              end
-
-              table.insert(diagnostics, {
-                lnum = tonumber(line_num) - 1,
-                col = tonumber(col) - 1,
-                severity = diagnostic_severity,
-                message = string.format("[%s] %s", code or "CS", message),
-                source = "dotnet_format",
               })
             end
           end
@@ -199,14 +159,11 @@ return {
       group = lint_augroup,
       callback = function()
         local ft = vim.bo.filetype
-        -- Only auto-lint for non-C# files (C# uses LSP for most diagnostics)
-        if ft ~= "cs" then
-          -- Update web linters based on current project
-          if vim.tbl_contains({ "typescript", "typescriptreact", "javascript", "javascriptreact", "vue" }, ft) then
-            update_web_linters()
-          end
-          lint.try_lint()
+        -- Update web linters based on current project
+        if vim.tbl_contains({ "typescript", "typescriptreact", "javascript", "javascriptreact", "vue" }, ft) then
+          update_web_linters()
         end
+        lint.try_lint()
       end,
     })
   end,

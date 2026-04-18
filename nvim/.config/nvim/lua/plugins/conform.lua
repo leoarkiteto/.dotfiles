@@ -16,21 +16,21 @@ end
 local function filter_available_formatters(formatters, context)
   local available = {}
 
-  -- Known commad mappings for formatters
+  -- Known command mappings for formatters
   local formatter_commands = {
     biome = "biome",
     prettierd = "prettierd",
     prettier = "prettier", -- Keep as fallback
-    cshtml_formatter = true, -- Custom formatter always available
     stylua = "stylua",
     yamlfmt = "yamlfmt",
-    csharpier = "csharpier",
     xmllint = "xmllint",
     sqlfluff = "sqlfluff",
     shfmt = "shfmt",
-    black = "black",
     injected = true,
     gdformat = "gdformat",
+    gofumpt = "gofumpt",
+    ["goimports-reviser"] = "goimports-reviser",
+    golines = "golines",
   }
 
   for _, formatter in ipairs(formatters) do
@@ -38,7 +38,7 @@ local function filter_available_formatters(formatters, context)
     local is_cmd_available = cmd == true or is_available(cmd)
 
     if is_cmd_available then
-      -- For biome, also check if we're in a project than can use it
+      -- For biome, also check if we're in a project that can use it
       if formatter == "biome" then
         local current_file = context and context.filename or vim.api.nvim_buf_get_name(0)
         if current_file ~= "" then
@@ -109,15 +109,6 @@ formatters.biome = {
   end,
 }
 
--- C# formatter
-if is_available("csharpier") then
-  formatters.csharpier = {
-    command = "csharpier",
-    args = { "format" },
-    stdin = true,
-  }
-end
-
 -- XML formatter
 if is_available("xmllint") then
   formatters.xmllint = {
@@ -152,6 +143,9 @@ end
 
 local formatters_by_ft = {}
 
+-- Go formatters
+formatters_by_ft.go = { "goimports-reviser", "gofumpt", "golines" }
+
 -- Web technologies (prefer prettierd, fallback to prettier, then biome)
 local web_filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact", "json", "jssonc" }
 for _, ft in ipairs(web_filetypes) do
@@ -167,23 +161,6 @@ formatters_by_ft.html = function()
   return #available > 0 and { available[1] } or {}
 end
 
--- .cshtml files (Razor views - use custom formatter with HTML parser)
-formatters_by_ft.cshtml = { "cshtml_formatter" }
-
--- C# (only if available)
-if is_available("csharpier") then
-  formatters_by_ft.cs = { "csharpier" }
-end
-
--- Custom formatter for .cshtml files (force HTML parser)
-formatters.cshtml_formatter = {
-  command = function()
-    return is_available("prettierd") and "prettierd" or "prettier"
-  end,
-  args = { "--parser", "html" },
-  stdin = true,
-}
-
 -- XML (only if available)
 if is_available("xmllint") then
   formatters_by_ft.xml = { "xmllint" }
@@ -194,9 +171,9 @@ if is_available("stylua") then
   formatters_by_ft.lua = { "stylua" }
 end
 
--- Markdown (use inected formatting for better results)
+-- Markdown (use injected formatting for better results)
 formatters_by_ft.markdown = { "injected" }
-formatters_by_ft["markdow.mdx"] = { "injected" }
+formatters_by_ft["markdown.mdx"] = { "injected" }
 
 -- YAML (prefer yamlfmt, fallback to prettierd, then prettier)
 local yaml_available = filter_available_formatters({ "yamlfmt", "prettierd", "prettier" })
@@ -222,40 +199,12 @@ if is_available("gdformat") then
   formatters_by_ft.gd = { "gdformat" }
 end
 
--- Dart/Flutter files (use dart format)
-if is_available("dart") then
-  formatters_by_ft.dart = { "dart_format" }
-end
-
--- Python files (use black)
-if is_available("black") then
-  formatters_by_ft.black = { "black" }
-end
-
--- Dart formatter
-if is_available("dart") then
-  formatters.dart_format = {
-    command = "dart",
-    args = { "format" },
-    stdin = true,
-  }
-end
-
--- Python formatter
-if is_available("black") then
-  formatters.black = {
-    command = "black",
-    args = { "--stdin-filename", "$FILENAME", "-" },
-    stdin = true,
-  }
-end
-
 -- GDScript formatter (gdtoolkit-format)
 -- Note: gdformat doesn't support stdin, so we use file-based formatting
 if is_available("gdformat") then
   formatters.gdformat = {
     command = "gdformat",
-    args = { "$FILENAME" },
+    args = { "" },
     stdin = false,
   }
 end

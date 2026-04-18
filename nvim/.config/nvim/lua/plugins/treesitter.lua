@@ -5,15 +5,17 @@ return {
   },
   opts = {
     ensure_installed = {
-      -- .NET Development
-      "c_sharp", -- C# language support
-      "xml", -- For .csproj, config files
+      "go", -- Go language support
+      "gomod",
+      "gowork",
+      "gosum",
+      "xml", -- For config files
       "yaml", -- For docker-compose, GitHub Actions
-      "json", -- For appsettings.json, package.json
-      "dockerfile", -- For containerized .NET apps
-      "toml", -- For .editorconfig, global.json
+      "json", -- For config files, package.json
+      "dockerfile", -- For containerized apps
+      "toml", -- For .editorconfig
 
-      -- Web Development (for full-stack .NET)
+      -- Web Development
       "html",
       "css",
       "scss",
@@ -44,8 +46,8 @@ return {
       "vim", -- For Neovim config
       "query", -- For custom Treesitter queries
 
-      -- Game Development
-      "gdscript", -- Godot scripting language
+      -- Game Development (Godot)
+      "gdscript",
       "godot_resource",
       "gdshader",
     },

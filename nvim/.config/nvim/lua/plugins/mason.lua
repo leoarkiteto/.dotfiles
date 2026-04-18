@@ -2,25 +2,22 @@ return {
   "mason-org/mason.nvim",
   opts = {
     ensure_installed = {
-      -- .NET Development Stack
-      -- Note: Using easy-dotnet.nvim with chsarp-ls (Roslyn-based) instead of omnisharp
-      -- chsarp-ls must be installed via: dotnet tool install --global chsarp-ls
-      "netcoredbg", -- .NET debugger
-      "csharpier", -- C# formatter
+      -- Go development
+      "gopls", -- Go LSP
+      "gofumpt", -- Stricter Go formatter
+      "goimports-reviser", -- Go imports formatter
+      "golines", -- Go line length formatter
+      "golangci-lint", -- Go linter
+      "delve", -- Go debugger
 
-      -- Flutter/Dart Development Stack
-      -- Note: dartls comes with Dart SDK, install via: brew install dart (macOS) or download from dart.dev
-      -- dart-debug-adapter is available via Mason
-      "dart-debug-adapter", -- Dart debugger
-
-      -- Web Development (for full-stack .NET projects)
+      -- Web Development
       "html-lsp", -- HTML LSP
       "css-lsp", -- CSS LSP
       "biome", -- JS/TS formatter
       "prettierd", -- HTML/CSS/JS formatter daemon (faster than prettier)
       "eslint_d", -- Fast ESLint daemon for linting
 
-      -- Database (common in .NET projects)
+      -- Database
       "sqlls", -- SQL LSP
       "sqlfluff", -- SQL formatter and linter
 
@@ -56,8 +53,8 @@ return {
     -- Ensure critical development tools are prioritized
     local registry = require("mason-registry")
 
-    -- Auto-install critical .NET and web tools if missing
-    local critical_tools = { "netcoredbg", "csharpier", "prettierd", "eslint_d", "dart-debug-adapter" }
+    -- Auto-install critical web tools if missing
+    local critical_tools = { "prettierd", "eslint_d" }
 
     for _, tool in ipairs(critical_tools) do
       local package = registry.get_package(tool)
