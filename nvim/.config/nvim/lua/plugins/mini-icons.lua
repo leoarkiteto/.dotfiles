@@ -1,16 +1,7 @@
 return {
   "nvim-mini/mini.icons",
   opts = {
-    filetype = {
-      Dockerfile = {
-        glyph = "󰡨",
-        hl = "MiniIconsBlue",
-      },
-      Makefile = {
-        glyph = "",
-        hl = "MiniIconsRed",
-      },
-    },
+    filetype = {},
     extension = {
       ["cs"] = {
         glyph = "",
@@ -62,6 +53,14 @@ return {
       },
     },
     file = {
+      ["Makefile"] = {
+        glyph = "",
+        hl = "MiniIconsRed",
+      },
+      ["Dockerfile"] = {
+        glyph = "󰡨",
+        hl = "MiniIconsBlue",
+      },
       ["README.md"] = {
         glyph = "󰍔",
         hl = "MiniIconsGrey",
@@ -82,9 +81,17 @@ return {
         glyph = "󰡨",
         hl = "MiniIconsGrey",
       },
-      ["go.mod"] = {
+      ["main.go"] = {
         glyph = "󰟓",
-        hl = "MiniIconsCyan",
+        hl = "MiniIconsPurple",
+      },
+      ["go.mod"] = {
+        glyph = "",
+        hl = "MiniIconsBlue",
+      },
+      ["go.sum"] = {
+        glyph = "",
+        hl = "MiniIconsGrey",
       },
       ["eslint.config.js"] = {
         glyph = "󰱺",

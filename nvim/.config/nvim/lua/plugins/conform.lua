@@ -228,9 +228,9 @@ return {
     },
 
     -- Notify on format errors
-    notify_on_error = true,
+    notify_on_error = false,
   },
 
   -- Notify on format errors
-  notify_on_error = true,
+  notify_on_error = false,
 }
