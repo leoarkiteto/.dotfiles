@@ -1,6 +1,9 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:/.composer/vendor/bin:$PATH
 
+# Path Go
+export PATH=$HOME/go/bin:$PATH
+
 # Path Colima/Docker
 export DOCKER_HOST="unix:///Users/leofranca/.colima/default/docker.sock"
 export DOCKER_BUILDKIT=0
@@ -17,11 +20,6 @@ export ZSH="$HOME/.oh-my-zsh"
 # Vim editor default OS
 export EDITOR='nvim'
 export VISUAL='nvim'
-
-# .NET
-export PATH="$PATH:$HOME/.dotnet/tools"
-export DOTNET_ROOT="/usr/local/share/dotnet"
-export PATH="$DOTNET_ROOT:$PATH"
 
 # Postgres
 export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
@@ -145,8 +143,3 @@ esac
 eval "$(starship init zsh)"
 
 . "$HOME/.local/bin/env"
-
-# Added by Antigravity
-export PATH="/Users/leofranca/.antigravity/antigravity/bin:$PATH"
-export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
-export JAVA_HOME=$(/usr/libexec/java_home -v 17)

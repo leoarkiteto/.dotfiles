@@ -28,16 +28,6 @@ return {
       paths = { snippets_path },
     })
 
-    -- Debug: Check if snippets loaded
-    vim.defer_fn(function()
-      local snippets = luasnip.get_snippets("gdscript")
-      if snippets and #snippets > 0 then
-        vim.notify(string.format("✅ Loaded %d GDScript snippets", #snippets), vim.log.levels.INFO)
-      else
-        vim.notify("⚠️  No GDScript snippets loaded!", vim.log.levels.WARN)
-      end
-    end, 1000)
-
     -- Load SnipMate-style snippets (optional)
     require("luasnip.loaders.from_snipmate").lazy_load()
 
