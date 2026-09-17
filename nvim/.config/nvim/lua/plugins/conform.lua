@@ -29,8 +29,9 @@ local function filter_available_formatters(formatters, context)
     injected = true,
     gdformat = "gdformat",
     gofumpt = "gofumpt",
-    ["goimports-reviser"] = "goimports-reviser",
     golines = "golines",
+    ["kulala-fmt"] = "kulala-fmt",
+    dockerfmt = "dockerfmt",
   }
 
   for _, formatter in ipairs(formatters) do
@@ -118,6 +119,13 @@ if is_available("xmllint") then
   }
 end
 
+-- Dockerfile formatter (writes to file, not stdin)
+formatters.dockerfmt = {
+  command = vim.fn.expand("~/.local/share/nvim/mason/bin/dockerfmt"),
+  args = { "--write", "$FILENAME" },
+  stdin = false,
+}
+
 -- SQL formatter (only if in a project with SQL files)
 if is_available("sqlfluff") then
   formatters.sqlfluff = {
@@ -144,7 +152,7 @@ end
 local formatters_by_ft = {}
 
 -- Go formatters
-formatters_by_ft.go = { "goimports-reviser", "gofumpt", "golines" }
+formatters_by_ft.go = { "gofumpt", "golines" }
 
 -- Web technologies (prefer prettierd, fallback to prettier, then biome)
 local web_filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact", "json", "jssonc" }
@@ -193,21 +201,11 @@ if is_available("shfmt") then
   formatters_by_ft.bash = { "shfmt" }
 end
 
--- GDScript (use gdformat if available)
-if is_available("gdformat") then
-  formatters_by_ft.gdscript = { "gdformat" }
-  formatters_by_ft.gd = { "gdformat" }
-end
+-- HTTP files (kulala-fmt)
+formatters_by_ft.http = { "kulala-fmt" }
 
--- GDScript formatter (gdtoolkit-format)
--- Note: gdformat doesn't support stdin, so we use file-based formatting
-if is_available("gdformat") then
-  formatters.gdformat = {
-    command = "gdformat",
-    args = { "" },
-    stdin = false,
-  }
-end
+-- Dockerfile (dockerfmt)
+formatters_by_ft.dockerfile = { "dockerfmt" }
 
 -- ============================================
 -- Return Configuration

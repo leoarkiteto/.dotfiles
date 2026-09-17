@@ -142,4 +142,3 @@ esac
 
 eval "$(starship init zsh)"
 
-. "$HOME/.local/bin/env"
